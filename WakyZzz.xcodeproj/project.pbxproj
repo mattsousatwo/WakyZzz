@@ -64,6 +64,7 @@
 		0424EB5220BEF89000E15E46 /* WakyZzz */ = {
 			isa = PBXGroup;
 			children = (
+				0424EB5F20BEF89100E15E46 /* Info.plist */,
 				60B8939D26361E59009D864F /* Model */,
 				60B8939C26361E1A009D864F /* Alarm Table View */,
 				60B8939B26361E06009D864F /* Views */,
@@ -78,7 +79,6 @@
 				0424EB5A20BEF89100E15E46 /* Assets.xcassets */,
 				0424EB7020C038AE00E15E46 /* sound.mp3 */,
 				0424EB5320BEF89000E15E46 /* AppDelegate.swift */,
-				0424EB5F20BEF89100E15E46 /* Info.plist */,
 			);
 			path = "Support Files ";
 			sourceTree = "<group>";

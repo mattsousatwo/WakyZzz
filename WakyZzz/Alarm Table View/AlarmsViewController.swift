@@ -101,7 +101,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.endUpdates()
     }
     
-    
+    // Edit alarm at row - present editing view
     func editAlarm(at indexPath: IndexPath) {
         editingIndexPath = indexPath
         presentAlarmViewController(alarm: alarm(at: indexPath))
