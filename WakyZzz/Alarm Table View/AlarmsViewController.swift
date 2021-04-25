@@ -14,6 +14,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var alarms = [Alarm]()
     var editingIndexPath: IndexPath?
     
+    // Add new Alarm
     @IBAction func addButtonPress(_ sender: Any) {
         presentAlarmViewController(alarm: nil)
     }
@@ -54,14 +55,17 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         alarms.append(alarm)
     }
     
+    // Number of sections in table
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
+    // Number of rows in per section
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return alarms.count
     }
 
+    // Cell for row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AlarmCell", for: indexPath) as! AlarmTableViewCell
         cell.delegate = self
@@ -72,6 +76,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return cell
     }
     
+    // Swipe Buttons 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
@@ -83,10 +88,12 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return [delete, edit]
     }
     
+    // Get alarm for row
     func alarm(at indexPath: IndexPath) -> Alarm? {
         return indexPath.row < alarms.count ? alarms[indexPath.row] : nil
     }
     
+    // Delete alarm at row
     func deleteAlarm(at indexPath: IndexPath) {
         tableView.beginUpdates()
         alarms.remove(at: alarms.count)
@@ -94,11 +101,13 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.endUpdates()
     }
     
+    
     func editAlarm(at indexPath: IndexPath) {
         editingIndexPath = indexPath
         presentAlarmViewController(alarm: alarm(at: indexPath))
     }
     
+    // Add alarm at row
     func addAlarm(_ alarm: Alarm, at indexPath: IndexPath) {
         tableView.beginUpdates()
         alarms.insert(alarm, at: indexPath.row)
@@ -106,11 +115,13 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.endUpdates()
     }
     
+    // Move alarm to row
     func moveAlarm(from originalIndextPath: IndexPath, to targetIndexPath: IndexPath) {
         let alarm = alarms.remove(at: originalIndextPath.row)
         alarms.insert(alarm, at: targetIndexPath.row)
         tableView.reloadData()
     }
+    
     
     func alarmCell(_ cell: AlarmTableViewCell, enabledChanged enabled: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
