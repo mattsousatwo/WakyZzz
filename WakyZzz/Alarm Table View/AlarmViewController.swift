@@ -12,6 +12,7 @@ import UIKit
 protocol AlarmViewControllerDelegate {
     func alarmViewControllerDone(alarm: Alarm)
     func alarmViewControllerCancel()
+    func sortAlarmsByTime()
 }
 
 enum AlarmViewTitle: String {
@@ -114,6 +115,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func doneButtonPress(_ sender: Any) {
         delegate?.alarmViewControllerDone(alarm: alarm!)
+        delegate?.sortAlarmsByTime()
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     @IBAction func datePickerValueChanged(_ sender: Any) {

@@ -123,7 +123,6 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.reloadData()
     }
     
-    
     func alarmCell(_ cell: AlarmTableViewCell, enabledChanged enabled: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
             if let alarm = self.alarm(at: indexPath) {
@@ -157,7 +156,6 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         alarms.sort() { $0.time > $1.time }
         tableView.reloadData()
     }
-    
     
     func alarmViewControllerCancel() {  
         editingIndexPath = nil
