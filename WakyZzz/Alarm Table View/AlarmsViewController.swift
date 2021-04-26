@@ -150,7 +150,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         editingIndexPath = nil
     }
     
-    func alarmViewControllerCancel() {
+    func alarmViewControllerCancel() {  
         editingIndexPath = nil
     }
 }

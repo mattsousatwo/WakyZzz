@@ -14,6 +14,11 @@ protocol AlarmViewControllerDelegate {
     func alarmViewControllerCancel()
 }
 
+enum AlarmViewTitle: String {
+    case newAlarm = "New Alarm"
+    case editAlarm = "Edit Alarm"
+}
+
 class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var datePicker: UIDatePicker!
@@ -26,21 +31,50 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         config()
+        print("AlarmViewController")
     }
     
     func config() {        
         if alarm == nil {
-            navigationItem.title = "New Alarm"
+            navigationItem.title = AlarmViewTitle.newAlarm.rawValue
             alarm = Alarm()
         }
         else {
-            navigationItem.title = "Edit Alarm"
+            navigationItem.title = AlarmViewTitle.editAlarm.rawValue
         }
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-        datePicker.date = (alarm?.alarmDate)!
+        setInitalTime()
+    }
+    
+    // Set date picker time
+    func setInitalTime() {
+        if navigationItem.title == AlarmViewTitle.newAlarm.rawValue {
+            let today = Date()
+            let calendar = NSCalendar.current
+            let day = calendar.component(.day, from: today)
+            let month = calendar.component(.month, from: today)
+            let year = calendar.component(.year, from: today)
+            
+            var dateComponents = DateComponents()
+            dateComponents.timeZone = TimeZone(abbreviation: "EST")
+            dateComponents.year = year
+            dateComponents.month = month
+            dateComponents.day = day
+            dateComponents.hour = 8
+            dateComponents.minute = 0
+            
+            if let createdDate = calendar.date(from: dateComponents) {
+                datePicker.date = createdDate
+            }
+            else {
+                datePicker.date = Date() 
+            }
+        }
+        else {
+            datePicker.date = (alarm?.alarmDate)!
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
