@@ -66,15 +66,21 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
             dateComponents.minute = 0
             
             if let createdDate = calendar.date(from: dateComponents) {
-                datePicker.date = createdDate
+//                datePicker.date = createdDate
+                alarm?.setTime(date: createdDate)
+                
+                 
             }
             else {
-                datePicker.date = Date() 
+//                datePicker.date = Date()
+                alarm?.setTime(date: Date())
             }
         }
-        else {
-            datePicker.date = (alarm?.alarmDate)!
-        }
+//        else {
+//            datePicker.date = (alarm?.alarmDate)!
+//        }
+
+        datePicker.date = (alarm?.alarmDate)!
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
