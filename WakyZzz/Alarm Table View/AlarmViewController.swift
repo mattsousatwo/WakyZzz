@@ -65,20 +65,13 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
             dateComponents.hour = 8
             dateComponents.minute = 0
             
-            if let createdDate = calendar.date(from: dateComponents) {
-//                datePicker.date = createdDate
-                alarm?.setTime(date: createdDate)
-                
-                 
+            if let defaultDate = calendar.date(from: dateComponents) {
+                alarm?.setTime(date: defaultDate)
             }
             else {
-//                datePicker.date = Date()
                 alarm?.setTime(date: Date())
             }
         }
-//        else {
-//            datePicker.date = (alarm?.alarmDate)!
-//        }
 
         datePicker.date = (alarm?.alarmDate)!
     }

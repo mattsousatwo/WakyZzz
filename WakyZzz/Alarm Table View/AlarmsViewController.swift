@@ -53,6 +53,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         alarm.repeatDays[0] = true
         alarm.repeatDays[6] = true
         alarms.append(alarm)
+        sortAlarmsByTime()
     }
     
     // Number of sections in table
@@ -140,15 +141,23 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         present(popupViewController, animated: true, completion: nil)
     }
     
-    func alarmViewControllerDone(alarm: Alarm) {
+    func alarmViewControllerDone(alarm newAlarm: Alarm) {
         if let editingIndexPath = editingIndexPath {
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
         }
         else {
-            addAlarm(alarm, at: IndexPath(row: alarms.count, section: 0))
+            addAlarm(newAlarm, at: IndexPath(row: alarms.count, section: 0))
+            sortAlarmsByTime()
         }
         editingIndexPath = nil
     }
+    
+    // Find Index for alarm based on Alarms.time
+    func sortAlarmsByTime() {
+        alarms.sort() { $0.time > $1.time }
+        tableView.reloadData()
+    }
+    
     
     func alarmViewControllerCancel() {  
         editingIndexPath = nil
