@@ -95,5 +95,83 @@ class NotificationManager {
         }
         
     }
+    
+    func schedualeNotifications(for alarm: Alarm) {
+        // - Content
+        let content = UNMutableNotificationContent()
+            content.title = "WakyZzz"
+            content.body = "Alarm: \(alarm.time)"
+            content.badge = NSNumber(value: 1)
+
+        // - Trigger
+        var year = 0
+        var month = 0
+        let day = 0
+        var hour = 0
+        var min = 0
+        var sec = 0
+        
+        let calendar = NSCalendar.current
+        if let date = alarm.alarmDate {
+            year = calendar.component(.year, from: date)
+            month = calendar.component(.month, from: date)
+            hour = calendar.component(.hour, from: date)
+            min = calendar.component(.minute, from: date)
+            sec = calendar.component(.second, from: date)
+        }
+        
+        var dateComponents = DateComponents()
+            dateComponents.timeZone = TimeZone(abbreviation: "EST")
+            dateComponents.year = year
+            dateComponents.month = month
+            dateComponents.hour = hour
+            dateComponents.minute = min
+            dateComponents.second = sec
+        
+        
+        
+        if alarm.repeatingDaysOfWeek.count == 0 {
+            
+            dateComponents.day = day
+            
+            addNotification(components: dateComponents,
+                            identifier: "\(alarm.uuid)",
+                            content: content)
+        }
+        else {
+            for day in alarm.repeatingDaysOfWeek {
+                
+                dateComponents.day = nil
+                dateComponents.weekday = day
+                
+                addNotification(components: dateComponents,
+                                identifier: "\(alarm.uuid)",
+                                content: content)
+            }
+        }
+
+    }
+    
+    // Add Notification
+    func addNotification(components: DateComponents, identifier: String, content: UNMutableNotificationContent) {
+        let  trigger = UNCalendarNotificationTrigger(dateMatching: components,
+                                                     repeats: false)
+
+        let request = UNNotificationRequest(identifier: identifier,
+                                            content: content,
+                                            trigger: trigger)
+        
+        userNotificationCenter.add(request) { (error) in
+            if let error = error {
+                print("Notification Error: ", error)
+            }
+        }
+    }
+    
+    // Disable notifications for alarm
+    func disable(alarm: Alarm) {
+        userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [alarm.uuid])
+    }
+    
 
 }

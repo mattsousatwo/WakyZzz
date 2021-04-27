@@ -48,6 +48,17 @@ class Alarm: NotificationManager {
         return captions.count > 0 ? captions.joined(separator: ", ") : "One time alarm"
     }
     
+    // Get repeating days of the week as Int - [1, 4] = ["Mon", "Thu"]
+    var repeatingDaysOfWeek: [Int] {
+        var days: [Int] = []
+        for i in 0 ..< repeatDays.count {
+            if repeatDays[i] == true {
+                days.append(i)
+            }
+        }
+        return days
+    }
+    
     func setTime(date: Date) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
