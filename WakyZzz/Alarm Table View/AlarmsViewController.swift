@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import UserNotifications
 
-class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AlarmCellDelegate, AlarmViewControllerDelegate {
+class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AlarmCellDelegate, AlarmViewControllerDelegate, UNUserNotificationCenterDelegate {
     @IBOutlet weak var tableView: UITableView!
     
     var alarms = [Alarm]()
@@ -23,6 +24,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         config()
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func config() {
@@ -31,6 +33,13 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.dataSource = self
         
         populateAlarms()
+        let notificationManager = NotificationManager()
+        
+        notificationManager.userNotificationCenter.delegate = self
+        
+        notificationManager.requestNotificationAuthorization()
+        notificationManager.schedualeNotification()
+        
         
     }
     
@@ -162,3 +171,15 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 }
 
+// UNUserNotificationCenterDelegate
+extension AlarmsViewController {
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
+    }
+    
+}
