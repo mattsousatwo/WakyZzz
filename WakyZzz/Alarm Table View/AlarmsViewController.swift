@@ -107,7 +107,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         alarms.remove(at: indexPath.row)
         let alarm = alarms[indexPath.row]
-
+        alarm.enabled = false
         alarm.disableNotifications()
         
         tableView.deleteRows(at: [indexPath], with: .automatic)
