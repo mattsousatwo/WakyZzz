@@ -116,6 +116,8 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBAction func doneButtonPress(_ sender: Any) {
         delegate?.alarmViewControllerDone(alarm: alarm!)
         delegate?.sortAlarmsByTime()
+        alarm?.disableNotifications()
+        alarm?.setNotifications()
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     @IBAction func datePickerValueChanged(_ sender: Any) {

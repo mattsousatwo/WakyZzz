@@ -38,8 +38,6 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         notificationManager.userNotificationCenter.delegate = self
         
         notificationManager.requestNotificationAuthorization()
-        notificationManager.schedualeNotification()
-        
         
     }
     
@@ -106,7 +104,12 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // Delete alarm at row
     func deleteAlarm(at indexPath: IndexPath) {
         tableView.beginUpdates()
-        alarms.remove(at: alarms.count - 1)
+        
+        alarms.remove(at: indexPath.row)
+        let alarm = alarms[indexPath.row]
+
+        alarm.disableNotifications()
+        
         tableView.deleteRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
     }
@@ -136,6 +139,14 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let indexPath = tableView.indexPath(for: cell) {
             if let alarm = self.alarm(at: indexPath) {
                 alarm.enabled = enabled
+                
+                switch enabled {
+                case true:
+                    alarm.setNotifications()
+                case false:
+                    alarm.disableNotifications()
+                }
+                
             }
         }
     }

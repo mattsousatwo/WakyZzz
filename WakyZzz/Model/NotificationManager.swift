@@ -34,7 +34,7 @@ class NotificationManager {
         var body = "Test Body"
         
         if let alarm = alarm {
-            title = "\(alarm.time)"
+            title = alarm.caption
             body = alarm.uuid
         }
         content.title = title
@@ -64,24 +64,10 @@ class NotificationManager {
         var components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: Date())
         components.minute = components.minute! + 1
         
-        
-//        var dateComponents = DateComponents()
-//            dateComponents.timeZone = TimeZone(abbreviation: "EST")
-//            dateComponents.year = year
-//            dateComponents.month = month
-//            dateComponents.day = day
-//            dateComponents.hour = hour
-//            dateComponents.minute = min
-//            dateComponents.second = sec
-        
         print("Trigger Components: \(components)")
 
         let  trigger = UNCalendarNotificationTrigger(dateMatching: components,
                                                      repeats: false)
-        
-//        let request = UNNotificationRequest(identifier: alarm.uuid,
-//                                            content: content,
-//                                            trigger: trigger)
 
         let request = UNNotificationRequest(identifier: "alarm.uuid",
                                             content: content,
@@ -100,43 +86,45 @@ class NotificationManager {
         // - Content
         let content = UNMutableNotificationContent()
             content.title = "WakyZzz"
-            content.body = "Alarm: \(alarm.time)"
+            content.body = "Alarm: \(alarm.caption)"
             content.badge = NSNumber(value: 1)
 
         // - Trigger
         var year = 0
         var month = 0
-        let day = 0
+        var day = 0
         var hour = 0
         var min = 0
-        var sec = 0
+        
         
         let calendar = NSCalendar.current
         if let date = alarm.alarmDate {
             year = calendar.component(.year, from: date)
             month = calendar.component(.month, from: date)
+            day = calendar.component(.day, from: date)
             hour = calendar.component(.hour, from: date)
             min = calendar.component(.minute, from: date)
-            sec = calendar.component(.second, from: date)
+            
         }
         
         var dateComponents = DateComponents()
             dateComponents.timeZone = TimeZone(abbreviation: "EST")
             dateComponents.year = year
             dateComponents.month = month
+            dateComponents.day = day
             dateComponents.hour = hour
             dateComponents.minute = min
-            dateComponents.second = sec
+            dateComponents.second = 0
         
         
         
         if alarm.repeatingDaysOfWeek.count == 0 {
-            
-            dateComponents.day = day
-            
+
             addNotification(components: dateComponents,
                             identifier: "\(alarm.uuid)",
                             content: content)
+            
+            print("---\n\n    Added Notification, repeatingDaysOfWeek.count == 0 \nSet Alarm Trigger at \(dateComponents)\n\n---")
         }
         else {
             for day in alarm.repeatingDaysOfWeek {
@@ -147,6 +135,7 @@ class NotificationManager {
                 addNotification(components: dateComponents,
                                 identifier: "\(alarm.uuid)",
                                 content: content)
+                print("---\n\n    Added Notification, day of the week: \(day) \nSet Alarm Trigger at \(dateComponents)\n\n---")
             }
         }
 
@@ -170,8 +159,10 @@ class NotificationManager {
     
     // Disable notifications for alarm
     func disable(alarm: Alarm) {
+        userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [alarm.uuid])
         userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [alarm.uuid])
+        print("Disable alarm: \(alarm.uuid) \(alarm.caption)")
+        
     }
     
-
 }

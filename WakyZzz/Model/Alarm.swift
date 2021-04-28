@@ -66,5 +66,21 @@ class Alarm: NotificationManager {
         time = components.hour! * 3600 + components.minute! * 60
     }
 
+    // Set notifications for alarm
+    func setNotifications() {
+        if self.enabled == true {
+            schedualeNotifications(for: self)
+        }
+    }
+    
+    // Disable all notifications for alarm
+    func disableNotifications() {
+        if self.enabled == false {
+            disable(alarm: self)
+        }
+    }
+    
+    
+    
 }
 

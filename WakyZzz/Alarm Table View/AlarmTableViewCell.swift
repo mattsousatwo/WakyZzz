@@ -40,6 +40,7 @@ class AlarmTableViewCell: UITableViewCell {
     
     @IBAction func enabledStateChanged(_ sender: Any) {
         delegate?.alarmCell(self, enabledChanged: enabledSwitch.isOn)
+        
     }
 
 }
