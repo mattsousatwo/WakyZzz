@@ -16,6 +16,16 @@ class Alarm: NotificationManager {
     var repeatDays = [false, false, false, false, false, false, false]
     var enabled = true
     var uuid = UUID().uuidString
+    var snoozeCount = 0 
+    var originalTime: Date? = nil 
+    
+    var isRepeating: Bool {
+        if repeatDays.contains( true ) {
+            return true
+        } else {
+            return false 
+        }
+    }
     
     var alarmDate: Date? {
         let date = Date()
@@ -28,8 +38,33 @@ class Alarm: NotificationManager {
         components.hour = h
         components.minute = m
         
-        return calendar.date(from: components)
+        let createdDate = calendar.date(from: components)
+        originalTime = createdDate
+        
+        return createdDate
     }
+    
+    /// Adds one minuete to alarm and schedules a new alarm 
+    func addOneMinuteToAlarm() {
+        let calendar = Calendar.current
+        if let alarmDate = self.alarmDate {
+            if let newDate = calendar.date(byAdding: .minute, value: 1, to: alarmDate) {
+                
+                let snoozeAlarm = Alarm()
+                snoozeAlarm.setTime(date: newDate)
+                snoozeAlarm.snoozeCount = 1
+                snoozeAlarm.originalTime = self.originalTime
+                snoozeAlarm.enabled = true
+                schedualeNotifications(for: snoozeAlarm)
+            }
+        }
+    }
+    
+    func setSnoozeNotification() {
+        snoozeCount += 1
+        scheduleNotificationForSnooze(alarm: self)
+    }
+    
     
     var caption: String {        
         let formatter = DateFormatter()
@@ -64,6 +99,7 @@ class Alarm: NotificationManager {
         let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
         
         time = components.hour! * 3600 + components.minute! * 60
+        
     }
 
     // Set notifications for alarm
@@ -76,7 +112,10 @@ class Alarm: NotificationManager {
     // Disable all notifications for alarm
     func disableNotifications() {
         if self.enabled == false {
-            disable(alarm: self)
+            disable(alarm: self.uuid)
+        } else {
+            self.enabled = false
+            disable(alarm: self.uuid)
         }
     }
     

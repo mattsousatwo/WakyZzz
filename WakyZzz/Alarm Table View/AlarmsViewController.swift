@@ -14,6 +14,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var alarms = [Alarm]()
     var editingIndexPath: IndexPath?
+    let notificationManager = NotificationManager()
     
     // Add new Alarm
     @IBAction func addButtonPress(_ sender: Any) {
@@ -33,12 +34,10 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.dataSource = self
         
         populateAlarms()
-        let notificationManager = NotificationManager()
         
         notificationManager.userNotificationCenter.delegate = self
         
         notificationManager.requestNotificationAuthorization()
-        
     }
     
     func populateAlarms() {
@@ -185,11 +184,73 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 // UNUserNotificationCenterDelegate
 extension AlarmsViewController {
     
+    // Handles Response to Notification In background
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let userInfo = response.notification.request.content.userInfo
+        let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String
+        
+        switch response.actionIdentifier {
+        case NotificationKey.snoozeAlarmLevel0.rawValue:
+            
+            // edit alarms time
+            // reset to 1 min later
+            guard let alarm = alarms.first(where: { $0.uuid == alarmUUID }) else { break }
+//            alarm.addOneMinuteToAlarm()
+            alarm.setSnoozeNotification()
+            
+            print("Notification: \(NotificationKey.snoozeAlarmLevel0)")
+            
+            break
+        case NotificationKey.stopAlarmLevel0.rawValue:
+            UIApplication.shared.applicationIconBadgeNumber = 0
+            // Disable alarm if does not repeat
+            // else leave enabled
+            guard let alarm = alarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            switch alarm.isRepeating {
+            case true:
+                break
+            case false:
+                notificationManager.disable(alarm: alarmUUID)
+            }
+            
+            print("Notification: \(NotificationKey.stopAlarmLevel0)")
+            break
+            
+        case NotificationKey.snoozeAlarmLevel1.rawValue:
+            // If snooze alarm was pressed
+            guard let alarm = alarms.first(where: { $0.uuid == alarmUUID }) else { break }
+            alarm.setSnoozeNotification()
+            
+            print("Notification: \(NotificationKey.snoozeAlarmLevel1)")
+            
+        break
+            
+            
+        case NotificationKey.stopSnoozeAlarmLevel1.rawValue:
+            // disable alarm
+            
+            print("Notification: \(NotificationKey.stopSnoozeAlarmLevel1)")
+            
+            break
+            
+        case NotificationKey.stopSnoozeAlarmLevel2.rawValue:
+            // If snooze alarm was pressed
+            
+            // use Random Act of Kindness
+            print("Notification: \(NotificationKey.stopSnoozeAlarmLevel2)")
+        break
+            
+        default:
+            break
+        }
+        
         completionHandler()
     }
     
+    // Handles Response to Notification In Foreground
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
         completionHandler([.alert, .badge, .sound])
     }
     
