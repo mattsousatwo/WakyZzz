@@ -8,6 +8,7 @@
 
 import UserNotifications
 import Foundation
+import UIKit
 
 
 enum NotificationKey: String {
@@ -256,6 +257,78 @@ class NotificationManager {
         print("Disable alarm: \(NotificationKey.snoozeAlarmLevel1.rawValue)")
     }
     
+    
+    // Will control response from Notification
+    func handle(response: UNNotificationResponse, alarms: [Alarm] ) {
+        let userInfo = response.notification.request.content.userInfo
+        let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String 
+        
+        switch response.actionIdentifier {
+        case NotificationKey.snoozeAlarmLevel0.rawValue:
+            
+            // edit alarms time
+            // reset to 1 min later
+            guard let alarm = alarms.first(where: { $0.uuid == alarmUUID }) else { break }
+            
+            alarm.setSnoozeNotification()
+            
+            print("Notification: \(NotificationKey.snoozeAlarmLevel0)")
+            
+            break
+        case NotificationKey.stopAlarmLevel0.rawValue:
+            UIApplication.shared.applicationIconBadgeNumber = 0
+            // Disable alarm if does not repeat
+            // else leave enabled
+            guard let alarm = alarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            switch alarm.isRepeating {
+            case true:
+                break
+            case false:
+                disable(alarm: alarmUUID)
+            }
+            
+            print("Notification: \(NotificationKey.stopAlarmLevel0)")
+            break
+            
+        case NotificationKey.snoozeAlarmLevel1.rawValue:
+            // If snooze alarm was pressed
+            guard let alarm = alarms.first(where: { $0.uuid == alarmUUID }) else { break }
+            alarm.setSnoozeNotification()
+            
+            print("Notification: \(NotificationKey.snoozeAlarmLevel1)")
+            
+        break
+            
+            
+        case NotificationKey.stopSnoozeAlarmLevel1.rawValue:
+            // disable alarm
+            UIApplication.shared.applicationIconBadgeNumber = 0
+            guard let alarm = alarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            switch alarm.isRepeating {
+            case true:
+                break
+            case false:
+                disable(alarm: alarmUUID)
+            }
+            
+            print("Notification: \(NotificationKey.stopSnoozeAlarmLevel1)")
+            
+            break
+            
+        case NotificationKey.stopSnoozeAlarmLevel2.rawValue:
+            // If snooze alarm was pressed
+            
+            
+            // use Random Act of Kindness
+            print("Notification: \(NotificationKey.stopSnoozeAlarmLevel2)")
+        break
+            
+        default:
+            break
+        }
+        
+    }
+
     
 }
 
