@@ -29,11 +29,11 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         config()
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        
         
         
         presentActionAlertController()
-        
+
     }
     
     func config() {
@@ -44,8 +44,8 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         populateAlarms()
         
         notificationManager.userNotificationCenter.delegate = self
+        UIApplication.shared.applicationIconBadgeNumber = 0
         
-        notificationManager.requestNotificationAuthorization()
     }
     
     func populateAlarms() {

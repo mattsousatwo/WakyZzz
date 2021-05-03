@@ -117,6 +117,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
         delegate?.alarmViewControllerDone(alarm: alarm!)
         delegate?.sortAlarmsByTime()
         alarm?.disableNotifications()
+        alarm?.enabled = true 
         alarm?.setNotifications()
         presentingViewController?.dismiss(animated: true, completion: nil)
     }

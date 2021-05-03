@@ -47,6 +47,33 @@ class NotificationManager {
     
     let userNotificationCenter = UNUserNotificationCenter.current()
     
+    init() {
+        requestNotificationAuthorization()
+        userNotificationCenter.setNotificationCategories([alarmCategory, snoozeCategory, snoozeCategoryLevel2])
+    }
+    
+}
+
+/// Configuration
+extension NotificationManager {
+    
+    // Ask user for permisson to send notifications
+    func requestNotificationAuthorization() {
+        let authorizationOptions = UNAuthorizationOptions.init(arrayLiteral: .alert, .badge, .sound)
+        
+        self.userNotificationCenter.requestAuthorization(options: authorizationOptions) { (success, error) in
+            if let error = error {
+                print("Error: ", error)
+            }
+            
+        }
+    }
+    
+}
+
+/// Notification Categories
+extension NotificationManager {
+    
     var alarmCategory: UNNotificationCategory {
 
         let snoozeAction = UNNotificationAction(identifier: NotificationKey.snoozeAlarmLevel0.rawValue,
@@ -61,7 +88,6 @@ class NotificationManager {
                                       intentIdentifiers: [],
                                       options: .customDismissAction)
     }
-    
     
     var snoozeCategory: UNNotificationCategory {
         
@@ -90,24 +116,10 @@ class NotificationManager {
                                       intentIdentifiers: [],
                                       options: .customDismissAction)
     }
-    
-    
-    
-    init() {
-        userNotificationCenter.setNotificationCategories([alarmCategory, snoozeCategory, snoozeCategoryLevel2])
-    }
-    
-    // Ask user for permisson to send notifications
-    func requestNotificationAuthorization() {
-        let authorizationOptions = UNAuthorizationOptions.init(arrayLiteral: .alert, .badge, .sound)
-        
-        self.userNotificationCenter.requestAuthorization(options: authorizationOptions) { (success, error) in
-            if let error = error {
-                print("Error: ", error)
-            }
-            
-        }
-    }
+}
+
+/// Schedule Notifications
+extension NotificationManager {
     
     // Schedule notification using the alarms time
     func schedualeNotifications(for alarm: Alarm) {
@@ -164,6 +176,10 @@ class NotificationManager {
                 dateComponents.day = nil
                 dateComponents.weekday = day
                 
+                
+                
+                
+                
                 addNotification(components: dateComponents,
                                 identifier: "\(alarm.uuid)",
                                 content: content)
@@ -172,7 +188,6 @@ class NotificationManager {
         }
 
     }
-    
     
     /// Schedule Notification for a snooze alarm - create an alarm one/two min later than original alarm
     func scheduleNotificationForSnooze(alarm: Alarm) {
@@ -230,7 +245,6 @@ class NotificationManager {
         
     }
     
-    
     // Register Notification
     func addNotification(components: DateComponents, identifier: String, content: UNMutableNotificationContent) {
         let  trigger = UNCalendarNotificationTrigger(dateMatching: components,
@@ -247,6 +261,11 @@ class NotificationManager {
         }
     }
     
+}
+
+/// Disable Notification
+extension NotificationManager {
+    
     // Disable notifications for alarm
     func disable(alarm uuid: String) {
         userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [uuid])
@@ -261,11 +280,15 @@ class NotificationManager {
         print("Disable alarm: \(NotificationKey.snoozeAlarmLevel1.rawValue)")
     }
     
+}
+
+/// Response from notification
+extension NotificationManager {
     
     // Will control response from Notification
     func handle(response: UNNotificationResponse, alarms: [Alarm] ) {
         let userInfo = response.notification.request.content.userInfo
-        let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String 
+        let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String
         
         switch response.actionIdentifier {
         case NotificationKey.snoozeAlarmLevel0.rawValue:
@@ -333,8 +356,4 @@ class NotificationManager {
         
     }
 
-    
 }
-
-
-

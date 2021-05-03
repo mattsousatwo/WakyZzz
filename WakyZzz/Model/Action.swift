@@ -105,7 +105,7 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
         switch result {
         case .cancelled:
             print("Email canceled")
-            controller.dismiss(animated: true) 
+            controller.dismiss(animated: true)
         case .failed:
             print("Email failed")
             controller.dismiss(animated: true)
@@ -121,23 +121,51 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
     }
 }
 
+
+
+extension MFMessageComposeViewController {
+    
+    // Present Alert Controller to warn of canceling message
+    func presentCancelAlertController() {
+        let alert = UIAlertController(title: "WakyZzz",
+                                      message: "Would you like to complete this task later?",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes",
+                                      style: .default,
+                                      handler: { (action) in
+                                            //schedule notification
+                                        
+                                        self.dismiss(animated: true)
+                                      }))
+        alert.addAction(UIAlertAction(title: "No",
+                                      style: .destructive,
+                                      handler: { (action) in
+                                            
+                                        self.body = "something"
+                                      }))
+        self.present(alert, animated: true)
+        
+    }
+
+}
+
 // Messages Delegate
 extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
     
     /// Handle message controller events
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-        let actionControl = ActionControl()
+//        let actionControl = ActionControl()
         
         switch result {
         case .cancelled:
             
             // Create reminder to send a message
             // Leave notification bage as 1
-            
-            actionControl.scheduleReminder()
+            controller.presentCancelAlertController()
+//            actionControl.scheduleReminder()
             
             print("Message Cancelled")
-            dismiss(animated: true)
+//            dismiss(animated: true)
         case .failed:
             print("Message Failed")
             dismiss(animated: true)
@@ -156,8 +184,10 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
         messageVC.body = "You look amazing today!"
         messageVC.recipients = []
         messageVC.messageComposeDelegate = self
+        
         if MFMessageComposeViewController.canSendText() {
             self.present(messageVC, animated: true)
+            
         }
     }
     
@@ -168,21 +198,17 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
         
 
     }
-    
+        
     /// Present Alert Controller to execute Action
     func presentActionAlertController() {
         
         // Get two random acts of kindness
         let actions = ActionControl()
         let randomAction = actions.shuffleActions()
-        
-        
-        // Depending on Action.type, handle events - EX: .type = call { call phone number }
-        
+                
         let alert = UIAlertController(title: "WakyZzz",
                                       message: "Time to complete a Random Act of Kindness.",
                                       preferredStyle: .actionSheet)
-        
         
         if let actionOne = randomAction.actOne {
             alert.addAction(UIAlertAction(title: actionOne.title,
@@ -202,8 +228,7 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
                                                 self.createComposeMessageView()
                                                 break
                                             }
-                                            
-                                            
+                           
                                           }))
         }
         
@@ -227,14 +252,6 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
 
                                           }))
         }
-        
-        // Remove Done button
-        
-        alert.addAction(UIAlertAction(title: "Done",
-                                      style: .destructive,
-                                      handler: { (action) in
-                                        alert.dismiss(animated: true)
-                                      }))
         
         self.present(alert, animated: true)
         
