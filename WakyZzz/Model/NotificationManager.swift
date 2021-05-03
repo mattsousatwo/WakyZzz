@@ -225,6 +225,10 @@ class NotificationManager {
         
     }
     
+    /// Create Reminder Notification - 30 mins
+    func scheduleReminder() {
+        
+    }
     
     
     // Register Notification
