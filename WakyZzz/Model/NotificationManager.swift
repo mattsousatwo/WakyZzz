@@ -46,10 +46,13 @@ enum NotificationKey: String {
 class NotificationManager {
     
     let userNotificationCenter = UNUserNotificationCenter.current()
+    let formatter = DateFormatter()
+    let calendar = NSCalendar.current
     
     init() {
         requestNotificationAuthorization()
         userNotificationCenter.setNotificationCategories([alarmCategory, snoozeCategory, snoozeCategoryLevel2])
+        formatter.dateStyle = .long
     }
     
 }
@@ -118,11 +121,39 @@ extension NotificationManager {
     }
 }
 
+
+// Adding Dates
+extension NotificationManager {
+
+    // Compare dates years
+    func withinYearApart(_ one: Date, _ two: Date) -> Bool {
+        let yearOne = calendar.component(.year, from: one)
+        let yearTwo = calendar.component(.year, from: two)
+        switch yearOne == yearTwo {
+        case true:
+            return true
+        case false:
+            return false
+        }
+    }
+    
+    // return nextDate with component
+    func nextDate(from date: Date, component: DateComponents) -> Date? {
+        return calendar.date(byAdding: component, to: date)
+        
+    }
+    
+    
+}
+
+
 /// Schedule Notifications
 extension NotificationManager {
     
     // Schedule notification using the alarms time
     func schedualeNotifications(for alarm: Alarm) {
+        guard let alarmDate = alarm.alarmDate else { return }
+        
         // - Content
         let content = UNMutableNotificationContent()
             content.title = NotificationKey.title.rawValue
@@ -134,60 +165,118 @@ extension NotificationManager {
             
 
         // - Trigger
-        var year = 0
-        var month = 0
-        var day = 0
-        var hour = 0
-        var min = 0
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: alarmDate)
+        components.second = 0
         
         
-        let calendar = NSCalendar.current
-        if let date = alarm.alarmDate {
-            year = calendar.component(.year, from: date)
-            month = calendar.component(.month, from: date)
-            day = calendar.component(.day, from: date)
-            hour = calendar.component(.hour, from: date)
-            min = calendar.component(.minute, from: date)
-            
-        }
-        
-        var dateComponents = DateComponents()
-            dateComponents.timeZone = TimeZone(abbreviation: "EST")
-            dateComponents.year = year
-            dateComponents.month = month
-            dateComponents.day = day
-            dateComponents.hour = hour
-            dateComponents.minute = min
-            dateComponents.second = 0
         
         
         
         if alarm.repeatingDaysOfWeek.count == 0 {
 
-            addNotification(components: dateComponents,
+            addNotification(components: components,
                             identifier: "\(alarm.uuid)",
                             content: content)
             
-            print("---\n\n    Added Notification, repeatingDaysOfWeek.count == 0 \nSet Alarm Trigger at \(dateComponents) - UUID: \(alarm.uuid)\n\n---")
+            print("---\n\n    Added Notification, repeatingDaysOfWeek.count == 0 \nSet Alarm Trigger at \(components) - UUID: \(alarm.uuid)\n\n---")
         }
         else {
-            for day in alarm.repeatingDaysOfWeek {
-                
-                dateComponents.day = nil
-                dateComponents.weekday = day
-                
-                
-                
-                
-                
-                addNotification(components: dateComponents,
-                                identifier: "\(alarm.uuid)",
-                                content: content)
-                print("---\n\n    Added Notification, day of the week: \(day) \nSet Alarm Trigger at \(dateComponents) - UUID: \(alarm.uuid)\n\n---")
-            }
+            
+            scheduleNotificationForRepeating(alarm: alarm)
+//            for day in alarm.repeatingDaysOfWeek {
+//
+//
+//
+//
+//
+//                // Isnt working
+//
+//
+//                components.day = nil
+//                components.weekday = day.value
+//
+//
+//
+//
+//
+//                addNotification(components: components,
+//                                identifier: "\(alarm.uuid)",
+//                                content: content)
+//                print("---\n\n    Added Notification, day of the week: \(day) \nSet Alarm Trigger at \(components) - UUID: \(alarm.uuid)\n\n---")
+//            }
         }
 
     }
+    
+    
+    func printTest(_ input: String) {
+        print("testing 1 - \(input)")
+    }
+    
+    /// Schedule Notification for repeating days
+    func scheduleNotificationForRepeating(alarm: Alarm) {
+        printTest("Start - scheduleNotificationForRepeating")
+        guard let alarmDate = alarm.alarmDate else { return }
+        let repeatingDays = alarm.repeatingDaysOfWeek
+//        var currentWeekday: DateComponents {
+//            return calendar.dateComponents([.weekday], from: Date())
+//        }
+        
+        var allDates: [Date] = []
+        var additionalComponent = DateComponents()
+        additionalComponent.weekOfYear = 1
+        formatter.dateStyle = .medium
+        var newDate = Date()
+        
+        let content = UNMutableNotificationContent()
+        content.title = NotificationKey.title.rawValue
+        content.badge = NSNumber(value: 1)
+        content.userInfo = [NotificationKey.alarmUUIDTag.rawValue: alarm.uuid]
+        content.body = NotificationKey.normalBody.rawValue
+        content.categoryIdentifier = NotificationKey.alarmCategoryID.rawValue
+        
+        
+        allDates.append(alarmDate)
+        
+        for day in repeatingDays {
+            guard let nextMatchingDate = calendar.nextDate(after: alarmDate,
+                                                           matching: day.component,
+                                                           matchingPolicy: .nextTime,
+                                                           direction: .forward) else {
+                return
+            }
+            
+            newDate = nextMatchingDate
+            
+            while withinYearApart(alarmDate, newDate) {
+                let lastDate = newDate
+                allDates.append(lastDate)
+                newDate = nextDate(from: lastDate, component: additionalComponent)!
+            }
+        }
+        
+        print("\n\nUpcoming Days in calendar\n")
+        for date in allDates {
+            
+            // Get dateComponents
+            var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+            components.second = 0
+            content.subtitle = NotificationKey.subtitle.rawValue + formatter.string(from: date)
+            
+            addNotification(components: components,
+                            identifier: alarm.uuid,
+                            content: content)
+            
+            print("\(formatter.string(from: date)) ~\n")
+        }
+        print("\n\n")
+        
+        
+        
+        
+        
+    }
+    
     
     /// Schedule Notification for a snooze alarm - create an alarm one/two min later than original alarm
     func scheduleNotificationForSnooze(alarm: Alarm) {
@@ -253,6 +342,8 @@ extension NotificationManager {
         let request = UNNotificationRequest(identifier: identifier,
                                             content: content,
                                             trigger: trigger)
+        
+        printTest("Notification: \(trigger), \nComponents: \(components), \nIdentifier: \(identifier)")
         
         userNotificationCenter.add(request) { (error) in
             if let error = error {

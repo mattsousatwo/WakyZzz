@@ -128,10 +128,47 @@ class LocalNotificationTests: XCTestCase {
         }
         print(" \n - \n\n")
         
-        
-        
-        
     }
     
+    
+    func testGettingPreviousDate() {
+        let notifications = NotificationManager()
+        let alarm = Alarm()
+        alarm.setTime(date: Date() )
+        alarm.repeatDays[.tuesday] = true
+        notifications.scheduleNotificationForRepeating(alarm: alarm)
+    }
+    
+    
+    func testIfDateIsInPast() {
+        var dayOne = DateComponents()
+        dayOne.month = 1
+        dayOne.day = 1
+        dayOne.year = 1
+        
+        var dayTwo = DateComponents()
+        dayTwo.month = 1
+        dayTwo.day = 1
+        dayTwo.year = 2
+        
+        let firstDay = calendar.date(from: dayOne)!
+        let secondDay = calendar.date(from: dayTwo)!
+        
+        formatter.dateStyle = .medium
+        
+        switch firstDay > secondDay {
+        case true:
+            print("\nfirstDay > secondDay")
+            print("\(formatter.string(from: firstDay)) > \(formatter.string(from:secondDay))\n")
+            XCTAssertTrue(firstDay > secondDay)
+        case false:
+            print("\nfirstDay < secondDay")
+            print("\(formatter.string(from: firstDay)) < \(formatter.string(from:secondDay))\n")
+            XCTAssertTrue(firstDay < secondDay)
+        }
+        
+        
+        XCTAssertTrue(firstDay < secondDay)
+    }
     
 }

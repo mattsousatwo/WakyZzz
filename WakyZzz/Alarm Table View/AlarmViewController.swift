@@ -86,10 +86,12 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let path = Alarm.daysOfWeek[indexPath.row]
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayOfWeekCell", for: indexPath)
-        cell.textLabel?.text = Alarm.daysOfWeek[indexPath.row]
-        cell.accessoryType = (alarm?.repeatDays[indexPath.row])! ? .checkmark : .none
-        if (alarm?.repeatDays[indexPath.row])! {
+        cell.textLabel?.text = Alarm.daysOfWeek[indexPath.row].rawValue
+        cell.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
+        if (alarm?.repeatDays[path])! {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
         return cell
@@ -100,13 +102,15 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        alarm?.repeatDays[indexPath.row] = true
-        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[indexPath.row])! ? .checkmark : .none
+        let path = Alarm.daysOfWeek[indexPath.row]
+        alarm?.repeatDays[path] = true
+        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        alarm?.repeatDays[indexPath.row] = false
-        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[indexPath.row])! ? .checkmark : .none
+        let path = Alarm.daysOfWeek[indexPath.row]
+        alarm?.repeatDays[path] = false
+        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
     }
     
     @IBAction func cancelButtonPress(_ sender: Any) {

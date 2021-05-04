@@ -55,17 +55,23 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Weekdays 5am
         alarm = Alarm()
         alarm.time = 5 * 3600
-        for i in 1 ... 5 {
-            alarm.repeatDays[i] = true
+        for (day, _) in alarm.repeatDays {
+            if day != .saturday ||
+                day != .sunday {
+                alarm.repeatDays[day] = true
+            }
         }
+//        for i in 1 ... 5 {
+//            alarm.repeatDays[i] = true
+//        }
         alarms.append(alarm)
         
         // Weekend 9am
         alarm = Alarm()
         alarm.time = 9 * 3600
         alarm.enabled = false
-        alarm.repeatDays[0] = true
-        alarm.repeatDays[6] = true
+        alarm.repeatDays[.sunday] = true
+        alarm.repeatDays[.friday] = true
         alarms.append(alarm)
         sortAlarmsByTime()
     }
