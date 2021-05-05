@@ -155,7 +155,7 @@ extension NotificationManager {
 extension NotificationManager {
     
     // Schedule notification using the alarms time
-    func schedualeNotifications(for alarm: Alarm) {
+    func schedualeNotifications(for alarm: OldAlarm) {
         guard let alarmDate = alarm.alarmDate else { return }
         
         // - Content
@@ -200,7 +200,7 @@ extension NotificationManager {
     }
     
     /// Schedule Notification for a snooze alarm - create an alarm one/two min later than original alarm
-    func scheduleNotificationForSnooze(alarm: Alarm) {
+    func scheduleNotificationForSnooze(alarm: OldAlarm) {
         
         let snoozeCount = alarm.snoozeCount
         guard let originalTime = alarm.originalTime else { return }
@@ -303,7 +303,7 @@ extension NotificationManager {
 extension NotificationManager {
     
     // Will control response from Notification
-    func handle(response: UNNotificationResponse, alarms: [Alarm] ) {
+    func handle(response: UNNotificationResponse, alarms: [OldAlarm] ) {
         let userInfo = response.notification.request.content.userInfo
         let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String
         

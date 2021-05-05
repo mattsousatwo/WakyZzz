@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol AlarmViewControllerDelegate {
-    func alarmViewControllerDone(alarm: Alarm)
+    func alarmViewControllerDone(alarm: OldAlarm)
     func alarmViewControllerCancel()
     func sortAlarmsByTime()
 }
@@ -24,7 +24,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var tableView: UITableView!
-    var alarm: Alarm?
+    var alarm: OldAlarm?
     
     var delegate: AlarmViewControllerDelegate?
     
@@ -38,7 +38,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func config() {        
         if alarm == nil {
             navigationItem.title = AlarmViewTitle.newAlarm.rawValue
-            alarm = Alarm()
+            alarm = OldAlarm()
         }
         else {
             navigationItem.title = AlarmViewTitle.editAlarm.rawValue
@@ -82,14 +82,17 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Alarm.daysOfWeek.count
+//        return Alarm.daysOfWeek.count
+        return Day.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let path = Alarm.daysOfWeek[indexPath.row]
+//        let path = Alarm.daysOfWeek[indexPath.row]
+        let path = Day.allCases[indexPath.row]
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayOfWeekCell", for: indexPath)
-        cell.textLabel?.text = Alarm.daysOfWeek[indexPath.row].rawValue
+//        cell.textLabel?.text = Alarm.daysOfWeek[indexPath.row].rawValue
+        cell.textLabel?.text = path.rawValue
         cell.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
         if (alarm?.repeatDays[path])! {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
@@ -102,13 +105,15 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let path = Alarm.daysOfWeek[indexPath.row]
+//        let path = Alarm.daysOfWeek[indexPath.row]
+        let path = Day.allCases[indexPath.row]
         alarm?.repeatDays[path] = true
         tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let path = Alarm.daysOfWeek[indexPath.row]
+//        let path = Alarm.daysOfWeek[indexPath.row]
+        let path = Day.allCases[indexPath.row]
         alarm?.repeatDays[path] = false
         tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
     }

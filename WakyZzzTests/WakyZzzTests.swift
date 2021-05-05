@@ -36,7 +36,7 @@ class WakyZzzTests: XCTestCase {
 
 class LocalNotificationTests: XCTestCase {
     
-    let alarm = Alarm()
+    let alarm = OldAlarm()
     let formatter = DateFormatter()
     let calendar = NSCalendar.current
 
@@ -133,7 +133,7 @@ class LocalNotificationTests: XCTestCase {
     
     func testGettingPreviousDate() {
         let notifications = NotificationManager()
-        let alarm = Alarm()
+        let alarm = OldAlarm()
         alarm.setTime(date: Date() )
         alarm.repeatDays[.tuesday] = true
         notifications.scheduleNotificationForRepeating(alarm: alarm)

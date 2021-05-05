@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DaysOfTheWeek: String {
+enum Day: String, CaseIterable {
     case sunday = "Sun"
     case monday = "Mon"
     case tuesday = "Tue"
@@ -63,31 +63,40 @@ enum DaysOfTheWeek: String {
             return 7
         }
     }
+    
+    // convert saved days from CD 
+    func convert(_ intArray: [Int]) -> [Day] {
+        var container: [Day] = []
+        for day in Day.allCases {
+            for int in intArray {
+                if day.value == int {
+                    container.append(day)
+                }
+            }
+        }
+        return container
+
+    }
 }
 
-class Alarm: NotificationManager { 
+class OldAlarm: NotificationManager {
     
-    static let daysOfWeek: [DaysOfTheWeek] = [.sunday,
-                                              .monday,
-                                              .tuesday,
-                                              .wednesday,
-                                              .thursday,
-                                              .friday,
-                                              .saturday]
-    
+    // Properties
     var time = 8 * 360
-    var repeatDays: [DaysOfTheWeek : Bool] = [.sunday: false,
-                                              .monday: false,
-                                              .tuesday: false,
-                                              .wednesday: false,
-                                              .thursday: false,
-                                              .friday: false,
-                                              .saturday: false]
+    var repeatDays: [Day : Bool] = [.sunday: false,
+                                    .monday: false,
+                                    .tuesday: false,
+                                    .wednesday: false,
+                                    .thursday: false,
+                                    .friday: false,
+                                    .saturday: false]
     var enabled = true
     var uuid = UUID().uuidString
     var snoozeCount = 0 
     var originalTime: Date? = nil 
     
+    // - Computed Properties -
+    // If Alarm is repeating or not
     var isRepeating: Bool {
         for (_, bool) in repeatDays {
             if bool == true {
@@ -99,6 +108,7 @@ class Alarm: NotificationManager {
         return false
     }
     
+    // date for alarm
     var alarmDate: Date? {
         let date = Date()
         let calendar = Calendar.current
@@ -116,28 +126,7 @@ class Alarm: NotificationManager {
         return createdDate
     }
     
-//    /// Adds one minuete to alarm and schedules a new alarm 
-//    func addOneMinuteToAlarm() {
-//        let calendar = Calendar.current
-//        if let alarmDate = self.alarmDate {
-//            if let newDate = calendar.date(byAdding: .minute, value: 1, to: alarmDate) {
-//                
-//                let snoozeAlarm = Alarm()
-//                snoozeAlarm.setTime(date: newDate)
-//                snoozeAlarm.snoozeCount = 1
-//                snoozeAlarm.originalTime = self.originalTime
-//                snoozeAlarm.enabled = true
-//                schedualeNotifications(for: snoozeAlarm)
-//            }
-//        }
-//    }
-    
-    func setSnoozeNotification() {
-        snoozeCount += 1
-        scheduleNotificationForSnooze(alarm: self)
-    }
-    
-    
+    // Time as String
     var caption: String {        
         let formatter = DateFormatter()
         formatter.dateStyle = .none
@@ -145,10 +134,11 @@ class Alarm: NotificationManager {
         return formatter.string(from: self.alarmDate!)
     }
     
+    // repeating days as String
     var repeating: String {
         var captions = [String]()
-        var days: [DaysOfTheWeek] = []
-        var sortedDays: [DaysOfTheWeek] = []
+        var days: [Day] = []
+        var sortedDays: [Day] = []
         
         
         for (key, bool) in repeatDays {
@@ -165,19 +155,12 @@ class Alarm: NotificationManager {
                 captions.append(day.rawValue)
             }
         }
-        
-        
-//        for i in 0 ..< repeatDays.count {
-//            if repeatDays[i] {
-//                captions.append(Alarm.daysOfWeek[i].rawValue)
-//            }
-//        }
         return captions.count > 0 ? captions.joined(separator: ", ") : "One time alarm"
     }
     
     // Get repeating days of the week as Int - [1, 4] = ["Mon", "Thu"]
-    var repeatingDaysOfWeek: [DaysOfTheWeek] {
-        var days: [DaysOfTheWeek] = []
+    var repeatingDaysOfWeek: [Day] {
+        var days: [Day] = []
         for (key, bool) in repeatDays {
             if bool == true {
                 days.append(key)
@@ -185,7 +168,18 @@ class Alarm: NotificationManager {
         }
         return days
     }
+}
+
+// Methods
+extension OldAlarm {
     
+    // Set notification for snooze alarm
+    func setSnoozeNotification() {
+        snoozeCount += 1
+        scheduleNotificationForSnooze(alarm: self)
+    }
+    
+    // Set time of alarm
     func setTime(date: Date) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
@@ -211,5 +205,5 @@ class Alarm: NotificationManager {
         }
     }
     
-}
 
+}

@@ -16,7 +16,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBOutlet weak var tableView: UITableView!
     
-    var alarms = [Alarm]()
+    var alarms = [OldAlarm]()
     var editingIndexPath: IndexPath?
     let notificationManager = NotificationManager()
     
@@ -50,10 +50,10 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func populateAlarms() {
         
-        var alarm: Alarm
+        var alarm: OldAlarm
         
         // Weekdays 5am
-        alarm = Alarm()
+        alarm = OldAlarm()
         alarm.time = 5 * 3600
         for (day, _) in alarm.repeatDays {
             if day != .saturday ||
@@ -67,7 +67,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         alarms.append(alarm)
         
         // Weekend 9am
-        alarm = Alarm()
+        alarm = OldAlarm()
         alarm.time = 9 * 3600
         alarm.enabled = false
         alarm.repeatDays[.sunday] = true
@@ -110,7 +110,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     // Get alarm for row
-    func alarm(at indexPath: IndexPath) -> Alarm? {
+    func alarm(at indexPath: IndexPath) -> OldAlarm? {
         return indexPath.row < alarms.count ? alarms[indexPath.row] : nil
     }
     
@@ -134,7 +134,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     // Add alarm at row
-    func addAlarm(_ alarm: Alarm, at indexPath: IndexPath) {
+    func addAlarm(_ alarm: OldAlarm, at indexPath: IndexPath) {
         tableView.beginUpdates()
         alarms.insert(alarm, at: indexPath.row)
         tableView.insertRows(at: [indexPath], with: .automatic)
@@ -164,7 +164,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func presentAlarmViewController(alarm: Alarm?) {
+    func presentAlarmViewController(alarm: OldAlarm?) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let popupViewController = storyboard.instantiateViewController(withIdentifier: "DetailNavigationController") as! UINavigationController
         let alarmViewController = popupViewController.viewControllers[0] as! AlarmViewController
@@ -173,7 +173,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         present(popupViewController, animated: true, completion: nil)
     }
     
-    func alarmViewControllerDone(alarm newAlarm: Alarm) {
+    func alarmViewControllerDone(alarm newAlarm: OldAlarm) {
         if let editingIndexPath = editingIndexPath {
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
         }
