@@ -147,12 +147,25 @@ class Alarm: NotificationManager {
     
     var repeating: String {
         var captions = [String]()
-    
+        var days: [DaysOfTheWeek] = []
+        var sortedDays: [DaysOfTheWeek] = []
+        
+        
         for (key, bool) in repeatDays {
             if bool == true {
-                captions.append(key.rawValue)
+                days.append(key)
             }
         }
+        
+        if days.count != 0 {
+            sortedDays = days.sorted { (one, two) -> Bool in
+                return one.value < two.value
+            }
+            for day in sortedDays {
+                captions.append(day.rawValue)
+            }
+        }
+        
         
 //        for i in 0 ..< repeatDays.count {
 //            if repeatDays[i] {
