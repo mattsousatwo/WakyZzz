@@ -17,6 +17,4 @@ public class Alarm: NSManagedObject {
     func update( ) {
     
     }
-    
-    
 }

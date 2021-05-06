@@ -17,6 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Find SQL Database
+        let URLS = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        print("\n~ SQL: \(URLS[URLS.count-1] as URL) \n~ \n~")
+        
         return true
     }
 

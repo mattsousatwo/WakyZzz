@@ -105,6 +105,7 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
         switch result {
         case .cancelled:
             print("Email canceled")
+            
             controller.dismiss(animated: true)
         case .failed:
             print("Email failed")
@@ -141,7 +142,7 @@ extension MFMessageComposeViewController {
                                       style: .destructive,
                                       handler: { (action) in
                                             
-                                        self.body = "something"
+                                        
                                       }))
         self.present(alert, animated: true)
         
@@ -185,8 +186,10 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
         messageVC.recipients = []
         messageVC.messageComposeDelegate = self
         
+        
         if MFMessageComposeViewController.canSendText() {
             self.present(messageVC, animated: true)
+            
             
         }
     }
