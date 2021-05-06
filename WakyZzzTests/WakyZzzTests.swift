@@ -130,16 +130,6 @@ class LocalNotificationTests: XCTestCase {
         
     }
     
-    
-    func testGettingPreviousDate() {
-        let notifications = NotificationManager()
-        let alarm = OldAlarm()
-        alarm.setTime(date: Date() )
-        alarm.repeatDays[.tuesday] = true
-        notifications.scheduleNotificationForRepeating(alarm: alarm)
-    }
-    
-    
     func testIfDateIsInPast() {
         var dayOne = DateComponents()
         dayOne.month = 1
@@ -169,6 +159,47 @@ class LocalNotificationTests: XCTestCase {
         
         
         XCTAssertTrue(firstDay < secondDay)
+    }
+    
+}
+
+class AlarmManagerTests: XCTestCase {
+    
+    let am = AlarmManager()
+    let testID = "123-TEST-ALARM-456"
+    
+    // Create new alarm test
+    func testAlarmCreation() {
+        let _ = am.createNewAlarm(uuid: testID)
+        XCTAssert(am.allAlarms.count != 0 )
+    }
+    
+    // Fetch all alarms test
+    func testFetchAllAlarms() {
+        am.fetchAllAlarms()
+        XCTAssert(am.allAlarms.count != 0)
+    }
+    
+    // Fetch Specific Alarm test
+    func testFetchSpecificAlarm() {
+        let _ = am.fetchAlarm(with: testID)
+        XCTAssert(am.allAlarms.count != 0)
+    }
+    
+    // Test Delete all alarms
+    func testDeleteAll() {
+        am.fetchAllAlarms()
+        am.deleteAllAlarms()
+        am.fetchAllAlarms()
+        XCTAssert(am.allAlarms.count == 0)
+    }
+    
+    // Test to delete Specific alarm
+    func testDeleteSpecificAlarm() {
+        am.fetchAllAlarms()
+        am.deleteAlarm(uuid: testID)
+        am.fetchAllAlarms()
+        XCTAssert(am.allAlarms.count == 0)
     }
     
 }

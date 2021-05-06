@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Day: String, CaseIterable {
+enum Day: String, CaseIterable, Encodable, Decodable {
     case sunday = "Sun"
     case monday = "Mon"
     case tuesday = "Tue"

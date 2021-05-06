@@ -23,6 +23,7 @@
 		606228D426434A4200CB3B4C /* Alarm+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D226434A4200CB3B4C /* Alarm+CoreDataClass.swift */; };
 		606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */; };
 		606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D926434B1400CB3B4C /* AlarmManager.swift */; };
+		60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F5A64126444FE500B03E0C /* CoredataCoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		606228D226434A4200CB3B4C /* Alarm+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataClass.swift"; path = "WakyZzz/Alarm+CoreDataClass.swift"; sourceTree = "<group>"; };
 		606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataProperties.swift"; path = "WakyZzz/Alarm+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		606228D926434B1400CB3B4C /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
+		60F5A64126444FE500B03E0C /* CoredataCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoredataCoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				606228D926434B1400CB3B4C /* AlarmManager.swift */,
+				60F5A64126444FE500B03E0C /* CoredataCoder.swift */,
 			);
 			path = Coredata;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 			files = (
 				0424EB5620BEF89000E15E46 /* AlarmsViewController.swift in Sources */,
 				606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */,
+				60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */,
 				0424EB6D20BF022900E15E46 /* AlarmTableViewCell.swift in Sources */,
 				606228CD264344C600CB3B4C /* WakyZzzDataModel.xcdatamodeld in Sources */,
 				0424EB6F20BF0FAE00E15E46 /* AlarmViewController.swift in Sources */,

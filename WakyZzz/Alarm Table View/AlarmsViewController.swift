@@ -89,7 +89,9 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCell(withIdentifier: "AlarmCell", for: indexPath) as! AlarmTableViewCell
         cell.delegate = self
         if let alarm = alarm(at: indexPath) {
-            cell.populate(caption: alarm.caption, subcaption: alarm.repeating, enabled: alarm.enabled)
+            cell.populate(caption: alarm.caption,
+                          subcaption: alarm.repeating,
+                          enabled: alarm.enabled)
         }
         
         return cell
@@ -171,6 +173,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         present(popupViewController, animated: true, completion: nil)
     }
     
+    // Delegate
     func alarmViewControllerDone(alarm newAlarm: OldAlarm) {
         if let editingIndexPath = editingIndexPath {
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
