@@ -9,31 +9,6 @@
 import XCTest
 @testable import WakyZzz
 
-class WakyZzzTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
-}
-
-
 class LocalNotificationTests: XCTestCase {
     
     let alarm = OldAlarm()
@@ -144,11 +119,9 @@ class LocalNotificationTests: XCTestCase {
         
         switch firstDay > secondDay {
         case true:
-            print("\nfirstDay > secondDay")
             print("\(formatter.string(from: firstDay)) > \(formatter.string(from:secondDay))\n")
             XCTAssertTrue(firstDay > secondDay)
         case false:
-            print("\nfirstDay < secondDay")
             print("\(formatter.string(from: firstDay)) < \(formatter.string(from:secondDay))\n")
             XCTAssertTrue(firstDay < secondDay)
         }
@@ -203,25 +176,31 @@ class AlarmManagerTests: XCTestCase {
         let id = "Patriots-Pink-SeaHorse"
         var alarm: Alarm?
 
-        print("\n")
+        
         let fetchedAlarm = am.fetchAlarm(with: id)
         if fetchedAlarm != nil {
             alarm = fetchedAlarm
-            print("Found Alarm: \(alarm?.uuid ?? "nil")")
         } else {
             alarm = am.createNewAlarm(uuid: id, time: Date())
-            print("Created Alarm: \(alarm?.uuid ?? "nil")")
         }
-        
-        if let alarmTime = alarm?.alarmTime {
-            print("date: \(alarmTime)")
-        }
-        
-        print("\n")
-        
-         
         
         XCTAssert(alarm?.alarmTime != nil)
+    }
+    
+    func testDateFormatting() {
+        var components = DateComponents()
+        components.year = 1
+        components.month = 1
+        components.day = 1
+        components.hour = 5
+        components.minute = 20
+        
+        let dateFromComponents = am.calendar.date(from: components)!
+        let formatted = am.format(date: dateFromComponents)
+        let recreated = am.format(string: formatted)
+        
+        
+        XCTAssert(recreated == dateFromComponents)
     }
     
 }

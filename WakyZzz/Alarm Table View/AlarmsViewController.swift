@@ -11,10 +11,10 @@ import UserNotifications
 
 class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AlarmCellDelegate, AlarmViewControllerDelegate, UNUserNotificationCenterDelegate {
     
-    
-
-    
     @IBOutlet weak var tableView: UITableView!
+    
+    let am = AlarmManager()
+    let nm = NotificationManager()
     
     var alarms = [OldAlarm]()
     var editingIndexPath: IndexPath?
@@ -48,31 +48,40 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func populateAlarms() {
         
-        var alarm: OldAlarm
-        
-        // Weekdays 5am
-        alarm = OldAlarm()
-        alarm.time = 5 * 3600
-        for (day, _) in alarm.repeatDays {
-            if day != .saturday ||
-                day != .sunday {
-                alarm.repeatDays[day] = true
-            }
-        }
-//        for i in 1 ... 5 {
-//            alarm.repeatDays[i] = true
+//        var alarm: OldAlarm
+//
+//        // Weekdays 5am
+//        alarm = OldAlarm()
+//        alarm.time = 5 * 3600
+//        for (day, _) in alarm.repeatDays {
+//            if day != .saturday ||
+//                day != .sunday {
+//                alarm.repeatDays[day] = true
+//            }
 //        }
-        alarms.append(alarm)
+////        for i in 1 ... 5 {
+////            alarm.repeatDays[i] = true
+////        }
+//        alarms.append(alarm)
+//
+//        // Weekend 9am
+//        alarm = OldAlarm()
+//        alarm.time = 9 * 3600
+//        alarm.enabled = false
+//        alarm.repeatDays[.sunday] = true
+//        alarm.repeatDays[.friday] = true
+//        alarms.append(alarm)
         
-        // Weekend 9am
-        alarm = OldAlarm()
-        alarm.time = 9 * 3600
-        alarm.enabled = false
-        alarm.repeatDays[.sunday] = true
-        alarm.repeatDays[.friday] = true
-        alarms.append(alarm)
+        
+        am.fetchAllAlarms()
+        
         sortAlarmsByTime()
     }
+    
+}
+
+// UITableViewControllerDelegate - Sections, rows, edit actions
+extension AlarmsViewController {
     
     // Number of sections in table
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -81,23 +90,24 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // Number of rows in per section
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return alarms.count
+        return am.allAlarms.count
     }
 
     // Cell for row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AlarmCell", for: indexPath) as! AlarmTableViewCell
         cell.delegate = self
-        if let alarm = alarm(at: indexPath) {
+//        if let alarm = alarm(at: indexPath) {
+        if let alarm = am.alarm(at: indexPath) {
             cell.populate(caption: alarm.caption,
-                          subcaption: alarm.repeating,
+                          subcaption: alarm.subcaption,
                           enabled: alarm.enabled)
         }
         
         return cell
     }
     
-    // Swipe Buttons 
+    // Swipe Buttons
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
@@ -109,19 +119,23 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return [delete, edit]
     }
     
-    // Get alarm for row
-    func alarm(at indexPath: IndexPath) -> OldAlarm? {
-        return indexPath.row < alarms.count ? alarms[indexPath.row] : nil
-    }
+}
+
+// TableView - Helper Methods - delete, edit, move,
+extension AlarmsViewController {
     
     // Delete alarm at row
     func deleteAlarm(at indexPath: IndexPath) {
         tableView.beginUpdates()
         
-        alarms.remove(at: indexPath.row)
-        let alarm = alarms[indexPath.row]
+//        am.allAlarms.remove(at: indexPath.row)
+        let alarm = am.allAlarms[indexPath.row]
         alarm.enabled = false
-        alarm.disableNotifications()
+        nm.disable(alarm: alarm)
+        
+        am.deleteAlarm(uuid: alarm.uuid!)
+        
+        
         
         tableView.deleteRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
@@ -130,41 +144,26 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // Edit alarm at row - present editing view
     func editAlarm(at indexPath: IndexPath) {
         editingIndexPath = indexPath
-        presentAlarmViewController(alarm: alarm(at: indexPath))
+        presentAlarmViewController(alarm: am.alarm(at: indexPath))
     }
     
     // Add alarm at row
-    func addAlarm(_ alarm: OldAlarm, at indexPath: IndexPath) {
+    func addAlarm(_ alarm: Alarm, at indexPath: IndexPath) {
         tableView.beginUpdates()
-        alarms.insert(alarm, at: indexPath.row)
+        am.allAlarms.insert(alarm, at: indexPath.row)
         tableView.insertRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
     }
     
     // Move alarm to row
     func moveAlarm(from originalIndextPath: IndexPath, to targetIndexPath: IndexPath) {
-        let alarm = alarms.remove(at: originalIndextPath.row)
-        alarms.insert(alarm, at: targetIndexPath.row)
+        let alarm = am.allAlarms.remove(at: originalIndextPath.row)
+        am.allAlarms.insert(alarm, at: targetIndexPath.row)
         tableView.reloadData()
     }
     
-    func alarmCell(_ cell: AlarmTableViewCell, enabledChanged enabled: Bool) {
-        if let indexPath = tableView.indexPath(for: cell) {
-            if let alarm = self.alarm(at: indexPath) {
-                alarm.enabled = enabled
-                
-                switch enabled {
-                case true:
-                    alarm.setNotifications()
-                case false:
-                    alarm.disableNotifications()
-                }
-                
-            }
-        }
-    }
-    
-    func presentAlarmViewController(alarm: OldAlarm?) {
+    // Present Alarm Detail View
+    func presentAlarmViewController(alarm: Alarm?) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let popupViewController = storyboard.instantiateViewController(withIdentifier: "DetailNavigationController") as! UINavigationController
         let alarmViewController = popupViewController.viewControllers[0] as! AlarmViewController
@@ -172,9 +171,13 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         alarmViewController.delegate = self
         present(popupViewController, animated: true, completion: nil)
     }
+}
+
+// AlarmViewControllerDelegate
+extension AlarmsViewController {
     
-    // Delegate
-    func alarmViewControllerDone(alarm newAlarm: OldAlarm) {
+    // Handle if alarm Detail was dismissed
+    func alarmViewControllerDone(alarm newAlarm: Alarm) {
         if let editingIndexPath = editingIndexPath {
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
         }
@@ -185,14 +188,37 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         editingIndexPath = nil
     }
     
+    // Cancel was pressed in AlarmViewController
+    func alarmViewControllerCancel() {
+        editingIndexPath = nil
+    }
+    
     // Find Index for alarm based on Alarms.time
     func sortAlarmsByTime() {
-        alarms.sort() { $0.time > $1.time }
+        am.allAlarms.sort() { $0.time > $1.time }
         tableView.reloadData()
     }
     
-    func alarmViewControllerCancel() {  
-        editingIndexPath = nil
+}
+
+// AlarmCellDelegate
+extension AlarmsViewController {
+    
+    // Handle alarm switch toggling
+    func alarmCell(_ cell: AlarmTableViewCell, enabledChanged enabled: Bool) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            if let alarm = am.alarm(at: indexPath) {
+                alarm.enabled = enabled
+                
+                switch enabled {
+                case true:
+                    nm.schedualeNotifications(for: alarm)
+                case false:
+                    nm.disable(alarm: alarm)
+                }
+                
+            }
+        }
     }
 }
 

@@ -22,7 +22,8 @@ class CoredataCoder {
     }
     
     // Decode days String to a dict of days
-    func decode(days: String) -> [Day : Bool]? {
+    func decode(days: String?) -> [Day : Bool]? {
+        guard let days = days else { return nil }
         guard let data = days.data(using: .utf8) else { return nil }
         guard let repeatDays = try? decoder.decode([Day:Bool].self, from: data) else { return nil }
         return repeatDays
@@ -30,8 +31,8 @@ class CoredataCoder {
     
     // Set date to standard format 
     func format(date: Date) -> String {
-        formatter.dateStyle = .full
-        formatter.timeStyle = .full
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         return formatter.string(from: date)
     }
     

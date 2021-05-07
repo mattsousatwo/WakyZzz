@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol AlarmViewControllerDelegate {
-    func alarmViewControllerDone(alarm: OldAlarm)
+    func alarmViewControllerDone(alarm: Alarm)
     func alarmViewControllerCancel()
     func sortAlarmsByTime()
 }
@@ -24,7 +24,9 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var tableView: UITableView!
-    var alarm: OldAlarm?
+    let am = AlarmManager()
+    let nm = NotificationManager()
+    var alarm: Alarm?
     
     var delegate: AlarmViewControllerDelegate?
     
@@ -38,7 +40,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func config() {        
         if alarm == nil {
             navigationItem.title = AlarmViewTitle.newAlarm.rawValue
-            alarm = OldAlarm()
+            alarm = am.createNewAlarm()
         }
         else {
             navigationItem.title = AlarmViewTitle.editAlarm.rawValue
@@ -67,14 +69,15 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
             dateComponents.minute = 0
             
             if let defaultDate = calendar.date(from: dateComponents) {
-                alarm?.setTime(date: defaultDate)
+//                alarm?.setTime(date: defaultDate)
+                am.setTime(alarm: alarm, time: defaultDate)
             }
             else {
-                alarm?.setTime(date: Date())
+                am.setTime(alarm: alarm)
             }
         }
 
-        datePicker.date = (alarm?.alarmDate)!
+        datePicker.date = (alarm?.alarmTime)!
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -93,8 +96,8 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayOfWeekCell", for: indexPath)
 //        cell.textLabel?.text = Alarm.daysOfWeek[indexPath.row].rawValue
         cell.textLabel?.text = path.rawValue
-        cell.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
-        if (alarm?.repeatDays[path])! {
+        cell.accessoryType = (alarm?.decodedRepeatingDays[path])! ? .checkmark : .none
+        if (alarm?.decodedRepeatingDays[path])! {
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
         return cell
@@ -107,15 +110,15 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let path = Alarm.daysOfWeek[indexPath.row]
         let path = Day.allCases[indexPath.row]
-        alarm?.repeatDays[path] = true
-        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
+        alarm?.set(path, repeat: true)
+        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.decodedRepeatingDays[path])! ? .checkmark : .none
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 //        let path = Alarm.daysOfWeek[indexPath.row]
         let path = Day.allCases[indexPath.row]
-        alarm?.repeatDays[path] = false
-        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.repeatDays[path])! ? .checkmark : .none
+        alarm?.set(path, repeat: false)
+        tableView.cellForRow(at: indexPath)?.accessoryType = (alarm?.decodedRepeatingDays[path])! ? .checkmark : .none
     }
     
     @IBAction func cancelButtonPress(_ sender: Any) {
@@ -123,15 +126,17 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @IBAction func doneButtonPress(_ sender: Any) {
-        delegate?.alarmViewControllerDone(alarm: alarm!)
+        guard let alarm = alarm else { return }
+        delegate?.alarmViewControllerDone(alarm: alarm)
         delegate?.sortAlarmsByTime()
-        alarm?.disableNotifications()
-        alarm?.enabled = true 
-        alarm?.setNotifications()
+        nm.disable(alarm: alarm)
+        am.update(alarm: alarm, enabled: true)
+        nm.schedualeNotifications(for: alarm)
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     @IBAction func datePickerValueChanged(_ sender: Any) {
-        alarm?.setTime(date: datePicker.date)
+        am.setTime(alarm: alarm, time: datePicker.date)
+        
     }
     
 }

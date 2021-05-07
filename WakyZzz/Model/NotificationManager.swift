@@ -45,6 +45,7 @@ enum NotificationKey: String {
 
 class NotificationManager {
     
+    let am = AlarmManager()
     let userNotificationCenter = UNUserNotificationCenter.current()
     let formatter = DateFormatter()
     let calendar = NSCalendar.current
@@ -154,9 +155,28 @@ extension NotificationManager {
 /// Schedule Notifications
 extension NotificationManager {
     
+    func incrementSnoozeCount(of alarm: Alarm) {
+        switch alarm.snoozeCount {
+        case 0:
+            alarm.snoozeCount = 1
+        case 1:
+            alarm.snoozeCount = 2
+        case 2:
+            alarm.snoozeCount = 0
+        default:
+            alarm.snoozeCount = 0
+        }
+        if alarm.hasChanges {
+            am.saveSelectedContext()
+        }
+    }
+
+    
     // Schedule notification using the alarms time
-    func schedualeNotifications(for alarm: OldAlarm) {
-        guard let alarmDate = alarm.alarmDate else { return }
+    func schedualeNotifications(for alarm: Alarm) {
+        guard let alarmDate = alarm.alarmTime else { return }
+        guard let uuid = alarm.uuid else { return }
+        guard alarm.enabled == true else { return }
         
         // - Content
         let content = UNMutableNotificationContent()
@@ -165,7 +185,7 @@ extension NotificationManager {
             content.body = NotificationKey.normalBody.rawValue
             content.badge = NSNumber(value: 1)
             content.categoryIdentifier = NotificationKey.alarmCategoryID.rawValue
-        content.userInfo = [NotificationKey.alarmUUIDTag.rawValue : alarm.uuid]
+            content.userInfo = [NotificationKey.alarmUUIDTag.rawValue : uuid]
         
         
         // - Trigger
@@ -174,23 +194,25 @@ extension NotificationManager {
         
         
         
-        switch alarm.repeatingDaysOfWeek.count {
+        
+        switch alarm.decodedRepeatingDays.count {
         case 0:
+            
             addNotification(components: components,
-                            identifier: "\(alarm.uuid)",
+                            identifier: "\(uuid)",
                             content: content)
             
-            print("---\n\n    Added Notification, repeatingDaysOfWeek.count == 0 \nSet Alarm Trigger at \(components) - UUID: \(alarm.uuid)\n\n---")
+            print("---\n\n    Added Notification, repeatingDaysOfWeek.count == 0 \nSet Alarm Trigger at \(components) - UUID: \(uuid)\n\n---")
         default:
             /// Get repeating days of the week
             components.year = nil
             components.month = nil
             components.day = nil
-            for day in alarm.repeatingDaysOfWeek {
+            for (day, _) in alarm.decodedRepeatingDays {
                 components.weekday = day.value
                 
                 addNotification(components: components,
-                                identifier: "\(alarm.uuid)",
+                                identifier: "\(uuid)",
                                 content: content,
                                 repeats: true)
             }
@@ -200,15 +222,17 @@ extension NotificationManager {
     }
     
     /// Schedule Notification for a snooze alarm - create an alarm one/two min later than original alarm
-    func scheduleNotificationForSnooze(alarm: OldAlarm) {
-        
+    func scheduleNotificationForSnooze(alarm: Alarm) {
+        incrementSnoozeCount(of: alarm)
+        guard let uuid = alarm.uuid else { return }
+        guard let alarmTime = alarm.alarmTime else { return }
         let snoozeCount = alarm.snoozeCount
-        guard let originalTime = alarm.originalTime else { return }
+        
         var originalTimeAsString: String {
             let formatter = DateFormatter()
             formatter.dateStyle = .none
             formatter.timeStyle = .short
-            return formatter.string(from: originalTime)
+            return formatter.string(from: alarmTime)
         }
         
         
@@ -216,8 +240,8 @@ extension NotificationManager {
         content.title = NotificationKey.title.rawValue
         content.subtitle = NotificationKey.subtitle.rawValue + originalTimeAsString
         content.badge = NSNumber(value: 1)
-        content.userInfo = [NotificationKey.alarmUUIDTag.rawValue: alarm.uuid,
-                            NotificationKey.originalTime.rawValue: originalTime]
+        content.userInfo = [NotificationKey.alarmUUIDTag.rawValue: uuid,
+                            NotificationKey.originalTime.rawValue: alarmTime]
 
         let calendar = NSCalendar.current
         
@@ -232,7 +256,7 @@ extension NotificationManager {
             content.body = NotificationKey.snoozeBody1.rawValue
             
             addNotification(components: components,
-                            identifier: (NotificationKey.snoozeNotificationPrefix.rawValue + alarm.uuid),
+                            identifier: (NotificationKey.snoozeNotificationPrefix.rawValue + uuid),
                             content: content)
             
         case 2:
@@ -240,7 +264,7 @@ extension NotificationManager {
             content.body = NotificationKey.snoozeBody2.rawValue
             
             addNotification(components: components,
-                            identifier: (NotificationKey.snoozeNotificationPrefix2.rawValue + alarm.uuid),
+                            identifier: (NotificationKey.snoozeNotificationPrefix2.rawValue + uuid),
                             content: content)
         default:
             break
@@ -284,9 +308,21 @@ extension NotificationManager {
 extension NotificationManager {
     
     // Disable notifications for alarm
-    func disable(alarm uuid: String) {
-        userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [uuid])
-        userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [uuid])
+    func disable(alarm: Alarm) {
+        guard let uuid = alarm.uuid else { return }
+        func disable() {
+            userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [uuid])
+            userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [uuid])
+        }
+        switch alarm.enabled {
+        case true:
+            am.update(alarm: alarm, enabled: false)
+            disable()
+        default:
+            disable()
+        }
+                
+        
         print("Disable alarm: \(uuid)")
         
     }
@@ -312,9 +348,10 @@ extension NotificationManager {
             
             // edit alarms time
             // reset to 1 min later
-            guard let alarm = alarms.first(where: { $0.uuid == alarmUUID }) else { break }
+            guard let alarm = am.fetchAlarm(with: alarmUUID) else { break }
             
-            alarm.setSnoozeNotification()
+            scheduleNotificationForSnooze(alarm: alarm)
+            
             
             print("Notification: \(NotificationKey.snoozeAlarmLevel0)")
             
@@ -323,12 +360,12 @@ extension NotificationManager {
             UIApplication.shared.applicationIconBadgeNumber = 0
             // Disable alarm if does not repeat
             // else leave enabled
-            guard let alarm = alarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            guard let alarm = am.allAlarms.first(where: {$0.uuid == alarmUUID}) else { break }
             switch alarm.isRepeating {
             case true:
                 break
             case false:
-                disable(alarm: alarmUUID)
+                disable(alarm: alarm)
             }
             
             print("Notification: \(NotificationKey.stopAlarmLevel0)")
@@ -336,8 +373,8 @@ extension NotificationManager {
             
         case NotificationKey.snoozeAlarmLevel1.rawValue:
             // If snooze alarm was pressed
-            guard let alarm = alarms.first(where: { $0.uuid == alarmUUID }) else { break }
-            alarm.setSnoozeNotification()
+            guard let alarm = am.fetchAlarm(with: alarmUUID) else { break }
+            scheduleNotificationForSnooze(alarm: alarm)
             
             print("Notification: \(NotificationKey.snoozeAlarmLevel1)")
             
@@ -347,12 +384,12 @@ extension NotificationManager {
         case NotificationKey.stopSnoozeAlarmLevel1.rawValue:
             // disable alarm
             UIApplication.shared.applicationIconBadgeNumber = 0
-            guard let alarm = alarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            guard let alarm = am.allAlarms.first(where: {$0.uuid == alarmUUID}) else { break }
             switch alarm.isRepeating {
             case true:
                 break
             case false:
-                disable(alarm: alarmUUID)
+                disable(alarm: alarm)
             }
             
             print("Notification: \(NotificationKey.stopSnoozeAlarmLevel1)")

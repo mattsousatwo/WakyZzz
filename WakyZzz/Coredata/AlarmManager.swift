@@ -16,6 +16,8 @@ enum AMKey: String {
 
 class AlarmManager: CoredataCoder {
     
+//    let nm = NotificationManager()
+    
     var allAlarms: [Alarm] = []
     
     var context: NSManagedObjectContext
@@ -76,9 +78,7 @@ extension AlarmManager {
         }
         
         if let time = time {
-            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
-            let s = components.hour! * 3600 + components.minute! * 60
-            alarm.time = Int32(s)
+            setTime(alarm: alarm, time: time)
         }
         
         if let days = days {
@@ -95,7 +95,6 @@ extension AlarmManager {
         return alarm
         
     }
-    
     
 }
 
@@ -120,8 +119,6 @@ extension AlarmManager {
             alarm.uuid = uuid
         }
         
-
-        
         if let enabled = enabled {
             alarm.enabled = enabled
         }
@@ -135,9 +132,7 @@ extension AlarmManager {
         }
         
         if let time = time {
-            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
-            let s = components.hour! * 3600 + components.minute! * 60
-            alarm.time = Int32(s)
+            setTime(alarm: alarm, time: time)
         }
         
         if let days = days {
@@ -152,22 +147,42 @@ extension AlarmManager {
     }
     
     // Set time of alarm 
-    func setTime(alarm: Alarm, time: Date? = nil) {
-        if let time = time {
-            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
-            let s = components.hour! * 3600 + components.minute! * 60
-            alarm.time = Int32(s)
-        } else {
-            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: Date())
-            let s = components.hour! * 3600 + components.minute! * 60
-            alarm.time = Int32(s)
+    func setTime(alarm: Alarm?, time: Date? = nil) {
+        if let alarm = alarm {
+            if let time = time {
+                let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
+                let s = components.hour! * 3600 + components.minute! * 60
+                alarm.time = Int32(s)
+            } else {
+                let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: Date())
+                let s = components.hour! * 3600 + components.minute! * 60
+                alarm.time = Int32(s)
+            }
         }
     }
-    
+        
 }
 
 // Fetch
 extension AlarmManager {
+    
+    // Sort Fetched Alarms
+    func sortAlarmsByTime() {
+        if allAlarms.count != 0 {
+            allAlarms.sort() { $0.time > $1.time }
+        }
+    }
+    
+    // Fetch all alarms
+    func fetchAllAlarms() {
+        let request: NSFetchRequest<Alarm> = Alarm.fetchRequest()
+        do {
+            allAlarms = try context.fetch(request)
+        } catch {
+            print(error)
+        }
+        sortAlarmsByTime()
+    }
     
     // Fetch Alarm with a uuid tag
     func fetchAlarm(with uuid: String) -> Alarm? {
@@ -199,17 +214,6 @@ extension AlarmManager {
         }
         return alarm
     }
-    
-    // Fetch all alarms
-    func fetchAllAlarms() {
-        let request: NSFetchRequest<Alarm> = Alarm.fetchRequest()
-        do {
-            allAlarms = try context.fetch(request)
-        } catch {
-            print(error)
-        }
-    }
-    
     
 }
 
@@ -244,11 +248,39 @@ extension AlarmManager {
     
 }
 
-
 extension AlarmManager {
     
     // Get Alarm for row
     func alarm(at indexPath: IndexPath) -> Alarm? {
         return indexPath.row < allAlarms.count ? allAlarms[indexPath.row] : nil
     }
+}
+
+
+// Notifications
+extension AlarmManager {
+    
+//    func setNotifications(for alarm: Alarm) {
+//        if alarm.enabled == true {
+//            nm.schedualeNotifications(for: alarm)
+//        }
+//    }
+    
+//    func setSnoozeNotifications(for alarm: Alarm) {
+//        incrementSnoozeCount(of: alarm)
+//        nm.scheduleNotificationForSnooze(alarm: alarm)
+//
+//    }
+    
+//    func disableNotifications(for alarm: Alarm) {
+//        guard let uuid = alarm.uuid else { return }
+//        switch alarm.enabled {
+//        case true:
+//            update(alarm: alarm, enabled: false)
+//            nm.disable(alarm: uuid)
+//        case false:
+//            nm.disable(alarm: uuid)
+//        }
+//    }
+    
 }

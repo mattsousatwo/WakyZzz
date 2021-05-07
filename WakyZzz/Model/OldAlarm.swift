@@ -172,12 +172,12 @@ class OldAlarm: NotificationManager {
 
 // Methods
 extension OldAlarm {
-    
-    // Set notification for snooze alarm
-    func setSnoozeNotification() {
-        snoozeCount += 1
-        scheduleNotificationForSnooze(alarm: self)
-    }
+//
+//    // Set notification for snooze alarm
+//    func setSnoozeNotification() {
+//        snoozeCount += 1
+//        scheduleNotificationForSnooze(alarm: self)
+//    }
     
     // Set time of alarm
     func setTime(date: Date) {
@@ -188,21 +188,21 @@ extension OldAlarm {
     }
 
     // Set notifications for alarm
-    func setNotifications() {
-        if self.enabled == true {
-            schedualeNotifications(for: self)
-        }
-    }
-    
-    // Disable all notifications for alarm
-    func disableNotifications() {
-        if self.enabled == false {
-            disable(alarm: self.uuid)
-        } else {
-            self.enabled = false
-            disable(alarm: self.uuid)
-        }
-    }
+//    func setNotifications() {
+//        if self.enabled == true {
+//            schedualeNotifications(for: self)
+//        }
+//    }
+//    
+//    // Disable all notifications for alarm
+//    func disableNotifications() {
+//        if self.enabled == false {
+//            disable(alarm: self.uuid)
+//        } else {
+//            self.enabled = false
+//            disable(alarm: self.uuid)
+//        }
+//    }
     
 
 }
