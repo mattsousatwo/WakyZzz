@@ -46,11 +46,11 @@ extension AlarmManager {
 
     // Create a new alarm using properties - alarm is disabled by default & a uuid is created if not specified
     func createNewAlarm(uuid: String? = nil,
-                        date: String? = nil,
+                        date: Date? = nil,
                         enabled: Bool? = nil,
                         originalTime: String? = nil,
-                        snoozeCount: Int? = nil,
-                        time: Int16? = nil,
+                        snoozeCount: SnoozeCount? = nil,
+                        time: Date? = nil,
                         days: [Day : Bool]? = nil) -> Alarm {
         let alarm = Alarm(context: context)
         
@@ -61,7 +61,18 @@ extension AlarmManager {
         }
         
         if let date = date {
-            alarm.alarmDate = date
+            let h = alarm.time/3600
+            let m = alarm.time/3600 - h * 60
+            
+            var components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
+            
+            components.hour = Int(h)
+            components.minute = Int(m)
+            
+            let createdDate = format(date: calendar.date(from: components)! )
+            
+            alarm.originalTime = createdDate
+            alarm.alarmDate = createdDate
         }
         
         if let enabled = enabled {
@@ -75,22 +86,23 @@ extension AlarmManager {
         }
         
         if let snoozeCount = snoozeCount {
-            alarm.snoozeCount = Int16(snoozeCount)
+            alarm.snoozeCount = snoozeCount.rawValue
         } else {
             alarm.snoozeCount = 0
         }
         
         
         if let time = time {
-            alarm.time = time
+            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
+            let s = components.hour! * 3600 + components.minute! * 60
+            alarm.time = Int32(s)
         }
         
-//        if let days = days {
-            // Convert days into String
-            // alarm.repeatingDays = convertedDays
-//
-//        }
-        
+        if let days = days {
+            if let encodedDays = encode(days: days) {
+                alarm.repeatingDays = encodedDays
+            }
+        }
         
         if alarm.hasChanges {
             saveSelectedContext()
@@ -158,7 +170,7 @@ extension AlarmManager {
         if let time = time {
             let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
             let s = components.hour! * 3600 + components.minute! * 60
-            alarm.time = Int16(s)
+            alarm.time = Int32(s)
         }
         
         if let days = days {
@@ -169,6 +181,19 @@ extension AlarmManager {
         
         if alarm.hasChanges {
             saveSelectedContext()
+        }
+    }
+    
+    // Set time of alarm 
+    func setTime(alarm: Alarm, time: Date? = nil) {
+        if let time = time {
+            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
+            let s = components.hour! * 3600 + components.minute! * 60
+            alarm.time = Int32(s)
+        } else {
+            let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: Date())
+            let s = components.hour! * 3600 + components.minute! * 60
+            alarm.time = Int32(s)
         }
     }
     

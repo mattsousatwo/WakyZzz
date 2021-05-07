@@ -202,4 +202,17 @@ class AlarmManagerTests: XCTestCase {
         XCTAssert(am.allAlarms.count == 0)
     }
     
+    // Test getting alarm Time
+    func testAlarmTime() {
+        
+        let alarm = am.createNewAlarm(uuid: "Patriots-Pink-SeaHorse", time: Date())
+        
+        let date = am.format(date: alarm.alarmTime!)
+        
+        print("date: \(date)")
+        
+        
+        XCTAssert(date != nil)
+    }
+    
 }

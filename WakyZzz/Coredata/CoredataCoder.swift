@@ -35,5 +35,11 @@ class CoredataCoder {
         return formatter.string(from: date)
     }
     
+    // Return Date from String 
+    func format(string: String) -> Date {
+        return formatter.date(from: string)!
+    }
+    
+    
 }
 

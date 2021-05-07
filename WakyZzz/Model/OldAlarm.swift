@@ -185,7 +185,6 @@ extension OldAlarm {
         let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
         
         time = components.hour! * 3600 + components.minute! * 60
-        
     }
 
     // Set notifications for alarm

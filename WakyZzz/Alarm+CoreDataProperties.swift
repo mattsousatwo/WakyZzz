@@ -17,7 +17,7 @@ extension Alarm {
         return NSFetchRequest<Alarm>(entityName: "Alarm")
     }
 
-    @NSManaged public var time: Int16
+    @NSManaged public var time: Int32
     @NSManaged public var enabled: Bool
     @NSManaged public var uuid: String?
     @NSManaged public var snoozeCount: Int16
