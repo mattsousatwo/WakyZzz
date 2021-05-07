@@ -43,10 +43,6 @@ class LocalNotificationTests: XCTestCase {
     
     
     func testGettingAllDates() {
-                
-//        let nextMonday = calendar.nextDate(after: Date(), matching: .init(weekday: 1), matchingPolicy: .nextTime)
-//        formatter.dateStyle = .medium
-//
         
         var allDates: [Date] = []
         let today = Date()
@@ -204,15 +200,28 @@ class AlarmManagerTests: XCTestCase {
     
     // Test getting alarm Time
     func testAlarmTime() {
+        let id = "Patriots-Pink-SeaHorse"
+        var alarm: Alarm?
+
+        print("\n")
+        let fetchedAlarm = am.fetchAlarm(with: id)
+        if fetchedAlarm != nil {
+            alarm = fetchedAlarm
+            print("Found Alarm: \(alarm?.uuid ?? "nil")")
+        } else {
+            alarm = am.createNewAlarm(uuid: id, time: Date())
+            print("Created Alarm: \(alarm?.uuid ?? "nil")")
+        }
         
-        let alarm = am.createNewAlarm(uuid: "Patriots-Pink-SeaHorse", time: Date())
+        if let alarmTime = alarm?.alarmTime {
+            print("date: \(alarmTime)")
+        }
         
-        let date = am.format(date: alarm.alarmTime!)
+        print("\n")
         
-        print("date: \(date)")
+         
         
-        
-        XCTAssert(date != nil)
+        XCTAssert(alarm?.alarmTime != nil)
     }
     
 }

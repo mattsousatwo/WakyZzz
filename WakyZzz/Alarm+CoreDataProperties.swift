@@ -22,7 +22,6 @@ extension Alarm {
     @NSManaged public var uuid: String?
     @NSManaged public var snoozeCount: Int16
     @NSManaged public var originalTime: String?
-    @NSManaged public var alarmDate: String?
     @NSManaged public var repeatingDays: String?
 
     

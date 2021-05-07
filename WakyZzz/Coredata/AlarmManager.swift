@@ -46,7 +46,6 @@ extension AlarmManager {
 
     // Create a new alarm using properties - alarm is disabled by default & a uuid is created if not specified
     func createNewAlarm(uuid: String? = nil,
-                        date: Date? = nil,
                         enabled: Bool? = nil,
                         originalTime: String? = nil,
                         snoozeCount: SnoozeCount? = nil,
@@ -58,21 +57,6 @@ extension AlarmManager {
             alarm.uuid = uuid
         } else {
             alarm.uuid = UUID().uuidString
-        }
-        
-        if let date = date {
-            let h = alarm.time/3600
-            let m = alarm.time/3600 - h * 60
-            
-            var components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
-            
-            components.hour = Int(h)
-            components.minute = Int(m)
-            
-            let createdDate = format(date: calendar.date(from: components)! )
-            
-            alarm.originalTime = createdDate
-            alarm.alarmDate = createdDate
         }
         
         if let enabled = enabled {
@@ -90,7 +74,6 @@ extension AlarmManager {
         } else {
             alarm.snoozeCount = 0
         }
-        
         
         if let time = time {
             let components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: time)
@@ -127,7 +110,6 @@ extension AlarmManager {
     // Update alarm properties
     func update(alarm: Alarm,
                 uuid: String? = nil,
-                date: Date? = nil,
                 enabled: Bool? = nil,
                 originalTime: String? = nil,
                 snoozeCount: SnoozeCount? = nil,
@@ -150,21 +132,6 @@ extension AlarmManager {
         
         if let snoozeCount = snoozeCount {
             alarm.snoozeCount = snoozeCount.rawValue
-        }
-        
-        if let date = date {
-            let h = alarm.time/3600
-            let m = alarm.time/3600 - h * 60
-            
-            var components = calendar.dateComponents([.hour, .minute, .month, .year, .day, .second, .weekOfMonth], from: date as Date)
-            
-            components.hour = Int(h)
-            components.minute = Int(m)
-            
-            let createdDate = format(date: calendar.date(from: components)! )
-            
-            alarm.originalTime = createdDate
-            alarm.alarmDate = createdDate
         }
         
         if let time = time {
