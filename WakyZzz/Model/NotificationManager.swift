@@ -339,7 +339,7 @@ extension NotificationManager {
 extension NotificationManager {
     
     // Will control response from Notification
-    func handle(response: UNNotificationResponse, alarms: [OldAlarm] ) {
+    func handle(response: UNNotificationResponse, in view: UIViewController) {
         let userInfo = response.notification.request.content.userInfo
         let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String
         
@@ -360,14 +360,14 @@ extension NotificationManager {
             UIApplication.shared.applicationIconBadgeNumber = 0
             // Disable alarm if does not repeat
             // else leave enabled
-            guard let alarm = am.allAlarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            guard let alarm = am.fetchAlarm(with: alarmUUID) else { break }
             switch alarm.isRepeating {
             case true:
                 break
             case false:
                 disable(alarm: alarm)
             }
-            
+            UIApplication.shared.applicationIconBadgeNumber = 0
             print("Notification: \(NotificationKey.stopAlarmLevel0)")
             break
             
@@ -384,7 +384,7 @@ extension NotificationManager {
         case NotificationKey.stopSnoozeAlarmLevel1.rawValue:
             // disable alarm
             UIApplication.shared.applicationIconBadgeNumber = 0
-            guard let alarm = am.allAlarms.first(where: {$0.uuid == alarmUUID}) else { break }
+            guard let alarm = am.fetchAlarm(with: alarmUUID) else { break }
             switch alarm.isRepeating {
             case true:
                 break
@@ -397,9 +397,11 @@ extension NotificationManager {
             break
             
         case NotificationKey.stopSnoozeAlarmLevel2.rawValue:
-            // If snooze alarm was pressed
             
             // MARK: Play Evil Sound
+            guard let view = view as? AlarmsViewController else { break }
+            view.presentActionAlertController()
+            
             
             // use Random Act of Kindness
             print("Notification: \(NotificationKey.stopSnoozeAlarmLevel2)")

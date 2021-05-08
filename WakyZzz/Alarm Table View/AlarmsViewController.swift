@@ -16,7 +16,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     let am = AlarmManager()
     let nm = NotificationManager()
     
-    var alarms = [OldAlarm]()
+//    var alarms = [OldAlarm]()
     var editingIndexPath: IndexPath?
     let notificationManager = NotificationManager()
     
@@ -182,7 +182,7 @@ extension AlarmsViewController {
             tableView.reloadRows(at: [editingIndexPath], with: .automatic)
         }
         else {
-            addAlarm(newAlarm, at: IndexPath(row: alarms.count, section: 0))
+            addAlarm(newAlarm, at: IndexPath(row: am.allAlarms.count, section: 0))
             sortAlarmsByTime()
         }
         editingIndexPath = nil
@@ -228,7 +228,7 @@ extension AlarmsViewController {
     // Handles Response to Notification In background
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        notificationManager.handle(response: response, alarms: alarms)
+        notificationManager.handle(response: response, in: self)
         
         completionHandler()
     }
