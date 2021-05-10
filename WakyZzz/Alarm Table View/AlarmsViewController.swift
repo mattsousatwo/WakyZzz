@@ -228,6 +228,7 @@ extension AlarmsViewController {
     // Handles Response to Notification In background
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
+        
         notificationManager.handle(response: response, in: self)
         
         completionHandler()

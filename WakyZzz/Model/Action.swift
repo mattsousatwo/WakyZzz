@@ -10,11 +10,11 @@ import UIKit
 import Foundation
 import MessageUI
 
+enum ActionType {
+    case text, call, email
+}
+
 class Action {
-    
-    enum ActionType {
-        case text, call, email
-    }
     
     var title: String
     var message: String? = nil

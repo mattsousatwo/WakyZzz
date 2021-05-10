@@ -12,7 +12,7 @@ import MessageUI
 
 // Phone Call
 extension AlarmsViewController {
-    
+     
     // Call Phone number
     func call(number phoneNumber: Int) {
         guard let number = URL(string: "tel://\(phoneNumber)") else { return }
@@ -185,7 +185,11 @@ extension MFMessageComposeViewController {
         alert.addAction(UIAlertAction(title: "Yes",
                                       style: .default,
                                       handler: { (action) in
-                                            //schedule notification
+                                        
+                                        // Schedule Reminder
+                                        let notificationManager = NotificationManager()
+                                        notificationManager.scheduleReminder()
+                                        
                                         
                                         self.dismiss(animated: true)
                                       }))
@@ -193,6 +197,7 @@ extension MFMessageComposeViewController {
                                       style: .destructive,
                                       handler: { (action) in
                                             
+                                       
                                         
                                       }))
         self.present(alert, animated: true)

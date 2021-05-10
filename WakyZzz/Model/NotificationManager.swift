@@ -16,10 +16,12 @@ enum NotificationKey: String {
     case alarmCategoryID = "ALARM_ID"
     case snoozeAlarmLevel1ID = "SNOOZE_ALARM_LEVEL_1_ID"
     case snoozeAlarmLevel2ID = "SNOOZE_ALARM_LEVEL_2_ID"
+    case reminderCategoryID = "REMINDER_CATEGORY_ID"
     
     // Notification Identifier
     case snoozeNotificationPrefix = "SNOOZE_ALARM_"
     case snoozeNotificationPrefix2 = "SNOOZE_ALARM_2_"
+    case reminderIdentifierPrefix = "REMINDER_"
     
     // Snooze Buttonsq
     case snoozeAlarmLevel0 = "SNOOZE_ALARM_LEVEL_0"
@@ -29,6 +31,8 @@ enum NotificationKey: String {
     case stopAlarmLevel0 = "STOP_ALARM_LEVEL_0"
     case stopSnoozeAlarmLevel1 = "STOP_SNOOZE_ALARM_LEVEL_1"
     case stopSnoozeAlarmLevel2 = "STOP_SNOOZE_ALARM_LEVEL_2"
+    case reminderStopAction = "STOP_REMINDER"
+    
     
     // Content
     case title = "WakyZzz"
@@ -52,7 +56,7 @@ class NotificationManager {
     
     init() {
         requestNotificationAuthorization()
-        userNotificationCenter.setNotificationCategories([alarmCategory, snoozeCategory, snoozeCategoryLevel2])
+        userNotificationCenter.setNotificationCategories([alarmCategory, snoozeCategory, snoozeCategoryLevel2, remiderCategory])
         formatter.dateStyle = .full
         formatter.timeStyle = .medium
     }
@@ -114,43 +118,29 @@ extension NotificationManager {
         
         let stopSnoozeAction = UNNotificationAction(identifier: NotificationKey.stopSnoozeAlarmLevel2.rawValue,
                                                     title: "Stop",
-                                                    options: UNNotificationActionOptions(rawValue: 0))
+                                                    options: [.foreground])
         
         return UNNotificationCategory(identifier: NotificationKey.snoozeAlarmLevel2ID.rawValue,
                                       actions: [stopSnoozeAction],
                                       intentIdentifiers: [],
                                       options: .customDismissAction)
     }
-}
-
-
-// Adding Dates
-extension NotificationManager {
-
-    // Compare dates years
-    func withinYearApart(_ one: Date, _ two: Date) -> Bool {
-        var component = DateComponents()
-        component.year = 1
+    
+    
+    // Category for reminder - when user cancels Random Act of Kindness
+    var remiderCategory: UNNotificationCategory {
         
-        if let controlDate = nextDate(from: one, component: component) {
-            if controlDate < two {
-                return false
-            } else {
-                return true
-            }
-        }
-        return false
+        let stopAction = UNNotificationAction(identifier: NotificationKey.reminderStopAction.rawValue,
+                                              title: "Stop",
+                                              options: [.foreground])
+        
+        return UNNotificationCategory(identifier: NotificationKey.reminderCategoryID.rawValue,
+                                      actions: [stopAction],
+                                      intentIdentifiers: [],
+                                      options: .customDismissAction)
     }
     
-    // return nextDate with component
-    func nextDate(from date: Date, component: DateComponents) -> Date? {
-        return calendar.date(byAdding: component, to: date)
-        
-    }
-    
-    
 }
-
 
 /// Schedule Notifications
 extension NotificationManager {
@@ -276,6 +266,31 @@ extension NotificationManager {
     
     /// Create Reminder Notification - 30 mins
     func scheduleReminder() {
+        let uuid = UUID().uuidString
+        
+        let content = UNMutableNotificationContent()
+        content.title = NotificationKey.title.rawValue
+        content.subtitle = "Reminder:"
+        content.body = "Random Act of Kindness"
+        content.badge = NSNumber(value: 1)
+        content.categoryIdentifier = NotificationKey.reminderCategoryID.rawValue
+        content.userInfo = [NotificationKey.alarmUUIDTag.rawValue: uuid]
+//        guard let reminderTime = calendar.date(byAdding: .minute, value: 30, to: Date()) else { return }
+                guard let reminderTime = calendar.date(byAdding: .minute, value: 1, to: Date()) else { return }
+        
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderTime)
+        components.second = 0
+        
+        
+        
+        addNotification(components: components,
+                        identifier: NotificationKey.reminderIdentifierPrefix.rawValue + uuid,
+                        content: content)
+        
+        
+        
+        
+        
         
     }
     
@@ -288,11 +303,13 @@ extension NotificationManager {
                                             content: content,
                                             trigger: trigger)
         
-        print("Notification: \(trigger), \nComponents: \(components), \nIdentifier: \(identifier)")
+        print("Notification: \(trigger), \nIdentifier: \(identifier)" )
+        
         
         if repeats == true {
             print("\ntrigger.date = \(trigger.dateComponents), nextDate = \(formatter.string(from: trigger.nextTriggerDate()!)) \n")
         }
+        
         
         userNotificationCenter.add(request) { (error) in
             if let error = error {
@@ -342,6 +359,8 @@ extension NotificationManager {
     func handle(response: UNNotificationResponse, in view: UIViewController) {
         let userInfo = response.notification.request.content.userInfo
         let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String
+        
+        
         
         switch response.actionIdentifier {
         case NotificationKey.snoozeAlarmLevel0.rawValue:
@@ -406,6 +425,15 @@ extension NotificationManager {
             // use Random Act of Kindness
             print("Notification: \(NotificationKey.stopSnoozeAlarmLevel2)")
         break
+            
+            
+        case NotificationKey.reminderStopAction.rawValue:
+
+            guard let view = view as? AlarmsViewController else { break }
+            view.presentActionAlertController()
+
+            print("Reminder Notification Stop ")
+            
             
         default:
             break
