@@ -16,7 +16,7 @@ extension AlarmsViewController {
     // Call Phone number
     func call(number phoneNumber: Int) {
         guard let number = URL(string: "tel://\(phoneNumber)") else { return }
-        UIApplication.shared.open(number, options: [:], completionHandler: { success in
+        UIApplication.shared.open(number, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
             if success == true {
                 print("Success")
             } else if success == false {
@@ -97,6 +97,9 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
             
             print("Message Sent")
             dismiss(animated: true)
+        default:
+            dismiss(animated: true)
+            break
         }
     }
     
@@ -215,4 +218,9 @@ extension UINavigationController {
         
     }
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
 }
