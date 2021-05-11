@@ -49,8 +49,14 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.delegate = self
         tableView.dataSource = self
         setInitalTime()
+        
+        let nc = NotificationCenter.default
+        nc.addObserver(self,
+                       selector: #selector(appMovedToBackground),
+                       name: UIApplication.willResignActiveNotification,
+                       object: nil)
     }
-    
+        
     // Set date picker time
     func setInitalTime() {
         if navigationItem.title == AlarmViewTitle.newAlarm.rawValue {
@@ -122,9 +128,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @IBAction func cancelButtonPress(_ sender: Any) {
-        guard let alarm = alarm else { return }
-        guard let alarmID = alarm.uuid else { return }
-        am.deleteAlarm(uuid: alarmID)
+        clearCreatedAlarm()
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
@@ -141,5 +145,21 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
         am.setTime(alarm: alarm, time: datePicker.date)
         
     }
+    
+    /// When the app moves to background dismiss view and delete newly created alarm
+    @objc func appMovedToBackground() {
+        clearCreatedAlarm()
+        self.dismiss(animated: true)
+    }
+
+    
+    /// Will remove newly created alarm
+    func clearCreatedAlarm() {
+        guard let alarm = alarm else { return }
+        guard let alarmID = alarm.uuid else { return }
+        am.deleteAlarm(uuid: alarmID)
+
+    }
+        
     
 }
