@@ -324,7 +324,7 @@ extension NotificationManager {
 /// Disable Notification
 extension NotificationManager {
     
-    // Disable notifications for alarm
+    /// Disable notifications for alarm
     func disable(alarm: Alarm) {
         guard let uuid = alarm.uuid else { return }
         func disable() {
@@ -344,6 +344,7 @@ extension NotificationManager {
         
     }
     
+    /// Disable sooze alarms for main alarm
     func diableSnoozeAlarm() {
         userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [NotificationKey.snoozeAlarmLevel1.rawValue])
         userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [NotificationKey.snoozeAlarmLevel1.rawValue])
@@ -355,6 +356,7 @@ extension NotificationManager {
 /// Response from notification
 extension NotificationManager {
     
+    /// Will set application notification badge number to 0
     func clearBadgeNumbers() {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
@@ -451,14 +453,28 @@ extension NotificationManager {
                 
                 let alarmVC = AlarmViewController()
                 
+                
+                
+                
 //                if alarmVC.isBeingPresented == true {
-                    alarmVC.presentingViewController?.dismiss(animated: true) {
-                        view.presentActionAlertController()
-                    }
+                
+//                    alarmVC.presentingViewController?.dismiss(animated: true) {
+//                        view.presentActionAlertController()
+//                    }
+                
 //                    }
 //                } else {
 //                    view.presentActionAlertController()
 //                }
+                
+                let sb = UIStoryboard(name: "Main", bundle: nil)
+                let detail = sb.instantiateViewController(identifier: "DetailNavigationController") as UINavigationController
+                detail.dismiss(animated: true) {
+                    view.becomeFirstResponder()
+                    view.presentActionAlertController()
+                }
+                
+
                 
                 
                 

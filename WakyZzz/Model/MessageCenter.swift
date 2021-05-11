@@ -52,50 +52,75 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
         case .cancelled:
             print("Email canceled")
             
-            controller.presentCancelAlertController()
-//            controller.dismiss(animated: true)
-        
+            controller.dismiss(animated: true) {
+                self.presentCancelAlert()
+            }
+            
         case .failed:
             print("Email failed")
-            controller.dismiss(animated: true)
+            controller.dismiss(animated: true) {
+                self.presentActionAlertController()
+            }
         case .saved:
             print("Email saved")
             controller.dismiss(animated: true)
         case .sent:
             print("Email sent")
-            controller.dismiss(animated: true)
+            controller.dismiss(animated: true) {
+                self.nm.clearBadgeNumbers()
+            }
         default:
             controller.dismiss(animated: true)
         }
     }
 }
 
+
+
 // Messages Delegate
 extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
     
+    // Present Alert Controller to warn of canceling message
+    func presentCancelAlert() {
+        let alert = UIAlertController(title: "WakyZzz",
+                                      message: "We will set a reminder for you to complete a task in 30 minutes.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay",
+                                      style: .default,
+                                      handler: { (action) in
+                                        
+                                        // Schedule Reminder
+                                        let notificationManager = NotificationManager()
+                                        notificationManager.scheduleReminder()
+                                        
+                                        self.dismiss(animated: true)
+                                      }))
+        
+        self.present(alert, animated: true)
+        
+    }
+
+    
     /// Handle message controller events
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-//        let actionControl = ActionControl()
-        
-        
         switch result {
         case .cancelled:
-            
-            // Create reminder to send a message
-            // Leave notification bage as 1
-            controller.presentCancelAlertController()
-//            actionControl.scheduleReminder()
+
+            self.warningMode = true
+            dismiss(animated: true) {
+                self.presentCancelAlert()
+            }
             
             print("Message Cancelled")
-//            dismiss(animated: true)
         case .failed:
             print("Message Failed")
-            dismiss(animated: true)
+            dismiss(animated: true) {
+                self.presentActionAlertController()
+            }
         case .sent:
             
-            // Set notification bage as 0
+            nm.clearBadgeNumbers()
             
-            print("Message Sent")
             dismiss(animated: true)
         default:
             dismiss(animated: true)
@@ -109,7 +134,6 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
         messageVC.body = "You look amazing today!"
         messageVC.recipients = []
         messageVC.messageComposeDelegate = self
-        
         
         if MFMessageComposeViewController.canSendText() {
             self.present(messageVC, animated: true)
@@ -185,39 +209,6 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
     }
 
     
-}
-
-// Warning Alert Controller for Message
-extension UINavigationController {
-    
-    // Present Alert Controller to warn of canceling message
-    func presentCancelAlertController() {
-        let alert = UIAlertController(title: "WakyZzz",
-                                      message: "Would you like to complete this task later?",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Yes",
-                                      style: .destructive,
-                                      handler: { (action) in
-                                        
-                                        // Schedule Reminder
-                                        let notificationManager = NotificationManager()
-                                        notificationManager.scheduleReminder()
-                                        
-                                        
-                                        self.dismiss(animated: true)
-                                      }))
-        alert.addAction(UIAlertAction(title: "No",
-                                      style: .default,
-                                      handler: { (action) in
-                                    
-                                        
-                                        
-                                      }))
-
-        self.present(alert, animated: true)
-        
-    }
-
 }
 
 // Helper function inserted by Swift 4.2 migrator.

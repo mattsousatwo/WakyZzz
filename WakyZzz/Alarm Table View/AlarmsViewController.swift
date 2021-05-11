@@ -16,6 +16,8 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     let am = AlarmManager()
     let nm = NotificationManager()
     
+    var warningMode = false
+    
 //    var alarms = [OldAlarm]()
     var editingIndexPath: IndexPath?
     
