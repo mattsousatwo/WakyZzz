@@ -355,12 +355,14 @@ extension NotificationManager {
 /// Response from notification
 extension NotificationManager {
     
+    func clearBadgeNumbers() {
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+    
     // Will control response from Notification
     func handle(response: UNNotificationResponse, in view: UIViewController) {
         let userInfo = response.notification.request.content.userInfo
         let alarmUUID = userInfo[NotificationKey.alarmUUIDTag.rawValue] as! String
-        
-        
         
         switch response.actionIdentifier {
         case NotificationKey.snoozeAlarmLevel0.rawValue:
@@ -376,7 +378,7 @@ extension NotificationManager {
             
             break
         case NotificationKey.stopAlarmLevel0.rawValue:
-            UIApplication.shared.applicationIconBadgeNumber = 0
+            clearBadgeNumbers()
             // Disable alarm if does not repeat
             // else leave enabled
             guard let alarm = am.fetchAlarm(with: alarmUUID) else { break }
@@ -386,7 +388,7 @@ extension NotificationManager {
             case false:
                 disable(alarm: alarm)
             }
-            UIApplication.shared.applicationIconBadgeNumber = 0
+            
             print("Notification: \(NotificationKey.stopAlarmLevel0)")
             break
             
@@ -402,7 +404,7 @@ extension NotificationManager {
             
         case NotificationKey.stopSnoozeAlarmLevel1.rawValue:
             // disable alarm
-            UIApplication.shared.applicationIconBadgeNumber = 0
+            clearBadgeNumbers()
             guard let alarm = am.fetchAlarm(with: alarmUUID) else { break }
             switch alarm.isRepeating {
             case true:
@@ -438,6 +440,56 @@ extension NotificationManager {
         default:
             break
         }
+        
+        
+        // Reminder Category
+        if response.notification.request.content.categoryIdentifier == NotificationKey.reminderCategoryID.rawValue {
+            
+            switch view {
+            case view as AlarmsViewController:
+                guard let view = view as? AlarmsViewController else { return }
+                
+                let alarmVC = AlarmViewController()
+                
+//                if alarmVC.isBeingPresented == true {
+                    alarmVC.presentingViewController?.dismiss(animated: true) {
+                        view.presentActionAlertController()
+                    }
+//                    }
+//                } else {
+//                    view.presentActionAlertController()
+//                }
+                
+                
+                
+                print("alarms")
+            case view as AlarmViewController:
+                guard let view = view as? AlarmViewController else { return }
+                
+                let alarmsVC = AlarmsViewController()
+                
+                
+                
+                view.present(alarmsVC, animated: true) {
+                    alarmsVC.presentActionAlertController()
+                }
+                
+                
+                print("alarm")
+            default:
+                print("other")
+                break
+            }
+//
+//            guard let view = view as? AlarmsViewController else { return }
+//            view.presentActionAlertController()
+//
+            clearBadgeNumbers()
+            print("Reminder Notification --- Category - Banner was tapped ")
+        }
+        
+        
+        
         
     }
 

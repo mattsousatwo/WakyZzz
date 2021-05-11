@@ -18,7 +18,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
 //    var alarms = [OldAlarm]()
     var editingIndexPath: IndexPath?
-    let notificationManager = NotificationManager()
+    
     
     // Add new Alarm
     @IBAction func addButtonPress(_ sender: Any) {
@@ -41,38 +41,13 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         populateAlarms()
         
-        notificationManager.userNotificationCenter.delegate = self
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        nm.userNotificationCenter.delegate = self
+        nm.clearBadgeNumbers()
         
     }
     
     func populateAlarms() {
-        
-//        var alarm: OldAlarm
-//
-//        // Weekdays 5am
-//        alarm = OldAlarm()
-//        alarm.time = 5 * 3600
-//        for (day, _) in alarm.repeatDays {
-//            if day != .saturday ||
-//                day != .sunday {
-//                alarm.repeatDays[day] = true
-//            }
-//        }
-////        for i in 1 ... 5 {
-////            alarm.repeatDays[i] = true
-////        }
-//        alarms.append(alarm)
-//
-//        // Weekend 9am
-//        alarm = OldAlarm()
-//        alarm.time = 9 * 3600
-//        alarm.enabled = false
-//        alarm.repeatDays[.sunday] = true
-//        alarm.repeatDays[.friday] = true
-//        alarms.append(alarm)
-        
-        
+
         am.fetchAllAlarms()
         
         sortAlarmsByTime()
@@ -108,15 +83,19 @@ extension AlarmsViewController {
     }
     
     // Swipe Buttons
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
             self.deleteAlarm(at: indexPath)
+            completion(true)
         }
-        let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+        let edit = UIContextualAction(style: .destructive, title: "Edit") { (action, view, completion) in
             self.editAlarm(at: indexPath)
+            completion(true)
         }
-        return [delete, edit]
+        
+        let swipeActions = UISwipeActionsConfiguration(actions: [edit, delete])
+        
+        return swipeActions
     }
     
 }
@@ -229,7 +208,7 @@ extension AlarmsViewController {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         
-        notificationManager.handle(response: response, in: self)
+        nm.handle(response: response, in: self)
         
         completionHandler()
     }
@@ -238,6 +217,9 @@ extension AlarmsViewController {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         completionHandler([.alert, .badge, .sound])
+        
+        
+        
     }
     
 }

@@ -52,8 +52,9 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
         case .cancelled:
             print("Email canceled")
             
-            
-            controller.dismiss(animated: true)
+            controller.presentCancelAlertController()
+//            controller.dismiss(animated: true)
+        
         case .failed:
             print("Email failed")
             controller.dismiss(animated: true)
@@ -75,6 +76,7 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
     /// Handle message controller events
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
 //        let actionControl = ActionControl()
+        
         
         switch result {
         case .cancelled:
@@ -115,7 +117,7 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
         
     /// Present Alert Controller to execute Action
     func presentActionAlertController() {
-        
+        print(#function)
         // Get two random acts of kindness
         let actions = ActionControl()
         let randomAction = actions.shuffleActions()
@@ -167,6 +169,14 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
                                           }))
         }
         
+        alert.addAction(UIAlertAction(title: "Cancel",
+                                      style: .cancel,
+                                      handler: { (action) in
+                                        
+                                        self.nm.scheduleReminder()
+                                        
+                                      }))
+        
         self.present(alert, animated: true)
         
     }
@@ -175,7 +185,7 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
 }
 
 // Warning Alert Controller for Message
-extension MFMessageComposeViewController {
+extension UINavigationController {
     
     // Present Alert Controller to warn of canceling message
     func presentCancelAlertController() {
@@ -183,7 +193,7 @@ extension MFMessageComposeViewController {
                                       message: "Would you like to complete this task later?",
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes",
-                                      style: .default,
+                                      style: .destructive,
                                       handler: { (action) in
                                         
                                         // Schedule Reminder
@@ -194,12 +204,13 @@ extension MFMessageComposeViewController {
                                         self.dismiss(animated: true)
                                       }))
         alert.addAction(UIAlertAction(title: "No",
-                                      style: .destructive,
+                                      style: .default,
                                       handler: { (action) in
-                                            
-                                       
+                                    
+                                        
                                         
                                       }))
+
         self.present(alert, animated: true)
         
     }

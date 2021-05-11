@@ -122,6 +122,9 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @IBAction func cancelButtonPress(_ sender: Any) {
+        guard let alarm = alarm else { return }
+        guard let alarmID = alarm.uuid else { return }
+        am.deleteAlarm(uuid: alarmID)
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     

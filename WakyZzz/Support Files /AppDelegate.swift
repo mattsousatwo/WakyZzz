@@ -42,6 +42,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let alarmsVC = storyboard.instantiateViewController(identifier: "AlarmsViewController")
+//
+//
+//
         UIApplication.shared.applicationIconBadgeNumber = 0
         
     }
