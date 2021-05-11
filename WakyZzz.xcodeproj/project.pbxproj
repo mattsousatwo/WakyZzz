@@ -24,6 +24,7 @@
 		606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */; };
 		606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D926434B1400CB3B4C /* AlarmManager.swift */; };
 		60CC88742646F56F0089E361 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CC88732646F56F0089E361 /* MessageCenter.swift */; };
+		60CEFA8B264AE4D80031AC57 /* MPVolumeView+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */; };
 		60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F5A64126444FE500B03E0C /* CoredataCoder.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataProperties.swift"; path = "WakyZzz/Alarm+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		606228D926434B1400CB3B4C /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
 		60CC88732646F56F0089E361 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
+		60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPVolumeView+EXT.swift"; sourceTree = "<group>"; };
 		60F5A64126444FE500B03E0C /* CoredataCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoredataCoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -168,6 +170,7 @@
 				0424EB6A20BEF96400E15E46 /* Action.swift */,
 				604B4BBA26386AC40022DCCC /* NotificationManager.swift */,
 				60CC88732646F56F0089E361 /* MessageCenter.swift */,
+				60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -288,6 +291,7 @@
 				0424EB6B20BEF96400E15E46 /* Action.swift in Sources */,
 				0424EB6920BEF93F00E15E46 /* OldAlarm.swift in Sources */,
 				606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */,
+				60CEFA8B264AE4D80031AC57 /* MPVolumeView+EXT.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

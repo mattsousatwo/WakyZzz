@@ -90,12 +90,14 @@ extension AlarmsViewController {
             self.deleteAlarm(at: indexPath)
             completion(true)
         }
-        let edit = UIContextualAction(style: .destructive, title: "Edit") { (action, view, completion) in
+        let edit = UIContextualAction(style: .normal, title: "Edit") { (action, view, completion) in
             self.editAlarm(at: indexPath)
             completion(true)
         }
         
-        let swipeActions = UISwipeActionsConfiguration(actions: [edit, delete])
+        let swipeActions = UISwipeActionsConfiguration(actions: [delete, edit])
+        
+        swipeActions.performsFirstActionWithFullSwipe = true
         
         return swipeActions
     }

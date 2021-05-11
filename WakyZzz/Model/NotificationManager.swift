@@ -9,7 +9,7 @@
 import UserNotifications
 import Foundation
 import UIKit
-
+import MediaPlayer
 
 enum NotificationKey: String {
     // Categories
@@ -68,7 +68,7 @@ extension NotificationManager {
     
     // Ask user for permisson to send notifications
     func requestNotificationAuthorization() {
-        let authorizationOptions = UNAuthorizationOptions.init(arrayLiteral: .alert, .badge, .sound)
+        let authorizationOptions = UNAuthorizationOptions.init(arrayLiteral: .alert, .badge, .sound, .criticalAlert)
         
         self.userNotificationCenter.requestAuthorization(options: authorizationOptions) { (success, error) in
             if let error = error {
@@ -182,7 +182,8 @@ extension NotificationManager {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: alarmDate)
         components.second = 0
         
-        
+        let sound = UNNotificationSound.default
+        content.sound = sound
         
         
         switch alarm.decodedRepeatingDays.count {
@@ -245,6 +246,9 @@ extension NotificationManager {
             content.categoryIdentifier = NotificationKey.snoozeAlarmLevel1ID.rawValue
             content.body = NotificationKey.snoozeBody1.rawValue
             
+            let sound = UNNotificationSound.defaultCriticalSound(withAudioVolume: 0.5)
+            content.sound = sound
+            
             addNotification(components: components,
                             identifier: (NotificationKey.snoozeNotificationPrefix.rawValue + uuid),
                             content: content)
@@ -252,6 +256,9 @@ extension NotificationManager {
         case 2:
             content.categoryIdentifier = NotificationKey.snoozeAlarmLevel2ID.rawValue
             content.body = NotificationKey.snoozeBody2.rawValue
+            
+            let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: "sound.mp3"), withAudioVolume: 0.8)
+            content.sound = sound
             
             addNotification(components: components,
                             identifier: (NotificationKey.snoozeNotificationPrefix2.rawValue + uuid),
@@ -281,7 +288,10 @@ extension NotificationManager {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderTime)
         components.second = 0
         
-        
+        MPVolumeView.setVolume(0.1)
+        let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: "sound.mp3"), withAudioVolume: 0.1)
+         
+        content.sound = sound
         
         addNotification(components: components,
                         identifier: NotificationKey.reminderIdentifierPrefix.rawValue + uuid,
@@ -302,6 +312,8 @@ extension NotificationManager {
         let request = UNNotificationRequest(identifier: identifier,
                                             content: content,
                                             trigger: trigger)
+        
+        
         
         print("Notification: \(trigger), \nIdentifier: \(identifier)" )
         
@@ -447,59 +459,9 @@ extension NotificationManager {
         // Reminder Category
         if response.notification.request.content.categoryIdentifier == NotificationKey.reminderCategoryID.rawValue {
             
-            switch view {
-            case view as AlarmsViewController:
-                guard let view = view as? AlarmsViewController else { return }
-                
-                let alarmVC = AlarmViewController()
-                
-                
-                
-                
-//                if alarmVC.isBeingPresented == true {
-                
-//                    alarmVC.presentingViewController?.dismiss(animated: true) {
-//                        view.presentActionAlertController()
-//                    }
-                
-//                    }
-//                } else {
-//                    view.presentActionAlertController()
-//                }
-                
-                let sb = UIStoryboard(name: "Main", bundle: nil)
-                let detail = sb.instantiateViewController(identifier: "DetailNavigationController") as UINavigationController
-                detail.dismiss(animated: true) {
-                    view.becomeFirstResponder()
-                    view.presentActionAlertController()
-                }
-                
-
-                
-                
-                
-                print("alarms")
-            case view as AlarmViewController:
-                guard let view = view as? AlarmViewController else { return }
-                
-                let alarmsVC = AlarmsViewController()
-                
-                
-                
-                view.present(alarmsVC, animated: true) {
-                    alarmsVC.presentActionAlertController()
-                }
-                
-                
-                print("alarm")
-            default:
-                print("other")
-                break
-            }
-//
-//            guard let view = view as? AlarmsViewController else { return }
-//            view.presentActionAlertController()
-//
+            guard let view = view as? AlarmsViewController else { return }
+            view.presentActionAlertController()
+            
             clearBadgeNumbers()
             print("Reminder Notification --- Category - Banner was tapped ")
         }
