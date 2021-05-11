@@ -11,8 +11,10 @@ import UIKit
 import MessageUI
 
 // Phone Call
-extension AlarmsViewController {
-     
+class MessageCenter: NSObject {
+    
+    let nm = NotificationManager()
+    
     // Call Phone number
     func call(number phoneNumber: Int) {
         guard let number = URL(string: "tel://\(phoneNumber)") else { return }
@@ -25,13 +27,29 @@ extension AlarmsViewController {
             
         })
     }
+    
+    
+    /// Create Message View Controller with preset body
+    func createComposeMessageView(in view: UIViewController) {
+        let messageVC = MFMessageComposeViewController()
+        messageVC.body = "You look amazing today!"
+        messageVC.recipients = []
+        messageVC.messageComposeDelegate = view
+        
+        if MFMessageComposeViewController.canSendText() {
+            view.present(messageVC, animated: true)
+            
+            
+        }
+    }
+    
 }
 
 // Mail Delegate
-extension AlarmsViewController: MFMailComposeViewControllerDelegate {
+extension MessageCenter: MFMailComposeViewControllerDelegate {
     
     // Create an email from action parameters
-    func sendEmail(with action: Action) {
+    func sendEmail(with action: Action, in view: UIViewController) {
         guard let recipient = action.email else { return }
         guard let body = action.message else { return }
         
@@ -41,25 +59,31 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
             mailVC.setToRecipients([recipient])
             mailVC.setMessageBody(body, isHTML: false)
             
-            self.present(mailVC, animated: true)
+            view.present(mailVC, animated: true)
         }
         
     }
     
     // Handle Mail Events
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        
+        let view = controller.presentingViewController
+        
+        
         switch result {
         case .cancelled:
             print("Email canceled")
             
             controller.dismiss(animated: true) {
-                self.presentCancelAlert()
+                
+                view?.presentCancelAlert()
             }
             
         case .failed:
             print("Email failed")
             controller.dismiss(animated: true) {
-                self.presentActionAlertController()
+                
+                view?.presentActionAlertController()
             }
         case .saved:
             print("Email saved")
@@ -78,7 +102,7 @@ extension AlarmsViewController: MFMailComposeViewControllerDelegate {
 
 
 // Messages Delegate
-extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
+extension UIViewController: MFMessageComposeViewControllerDelegate {
     
     // Present Alert Controller to warn of canceling message
     func presentCancelAlert() {
@@ -102,11 +126,13 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
 
     
     /// Handle message controller events
-    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+    public func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        let nm = NotificationManager()
+        
         switch result {
         case .cancelled:
 
-            self.warningMode = true
+            
             dismiss(animated: true) {
                 self.presentCancelAlert()
             }
@@ -127,28 +153,19 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
             break
         }
     }
-    
-    /// Create Message View Controller with preset body
-    func createComposeMessageView() {
-        let messageVC = MFMessageComposeViewController()
-        messageVC.body = "You look amazing today!"
-        messageVC.recipients = []
-        messageVC.messageComposeDelegate = self
         
-        if MFMessageComposeViewController.canSendText() {
-            self.present(messageVC, animated: true)
-            
-            
-        }
-    }
-        
+}
+
+extension UIViewController {
     /// Present Alert Controller to execute Action
     func presentActionAlertController() {
         print(#function)
         // Get two random acts of kindness
         let actions = ActionControl()
         let randomAction = actions.shuffleActions()
-                
+        let messageCenter = MessageCenter()
+        let nm = NotificationManager()
+        
         let alert = UIAlertController(title: "WakyZzz",
                                       message: "Time to complete a Random Act of Kindness.",
                                       preferredStyle: .actionSheet)
@@ -161,14 +178,14 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
                                             switch actionOne.type {
                                             case .call:
                                                 if let phoneNumber = actionOne.phoneNumber {
-                                                    self.call(number: phoneNumber)
+                                                    messageCenter.call(number: phoneNumber)
                                                 }
                                                 break
                                             case .email:
-                                                self.sendEmail(with: actionOne)
+                                                messageCenter.sendEmail(with: actionOne, in: self)
                                                 break
                                             case .text:
-                                                self.createComposeMessageView()
+                                                messageCenter.createComposeMessageView(in: self)
                                                 break
                                             }
                            
@@ -183,14 +200,14 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
                                             switch actionTwo.type {
                                             case .call:
                                                 if let phoneNumber = actionTwo.phoneNumber {
-                                                    self.call(number: phoneNumber)
+                                                    messageCenter.call(number: phoneNumber)
                                                 }
                                                 break
                                             case .email:
-                                                self.sendEmail(with: actionTwo)
+                                                messageCenter.sendEmail(with: actionTwo, in: self)
                                                 break
                                             case .text:
-                                                self.createComposeMessageView()
+                                                messageCenter.createComposeMessageView(in: self)
                                             }
 
                                           }))
@@ -200,15 +217,13 @@ extension AlarmsViewController: MFMessageComposeViewControllerDelegate {
                                       style: .cancel,
                                       handler: { (action) in
                                         
-                                        self.nm.scheduleReminder()
+                                        nm.scheduleReminder()
                                         
                                       }))
         
         self.present(alert, animated: true)
         
     }
-
-    
 }
 
 // Helper function inserted by Swift 4.2 migrator.

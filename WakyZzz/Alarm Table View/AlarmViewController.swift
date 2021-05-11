@@ -37,6 +37,11 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
         print("AlarmViewController")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        clearCreatedAlarm()
+    }
+    
     func config() {        
         if alarm == nil {
             navigationItem.title = AlarmViewTitle.newAlarm.rawValue
@@ -157,6 +162,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func clearCreatedAlarm() {
         guard let alarm = alarm else { return }
         guard let alarmID = alarm.uuid else { return }
+        print(#function)
         am.deleteAlarm(uuid: alarmID)
 
     }

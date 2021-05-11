@@ -23,7 +23,7 @@ enum NotificationKey: String {
     case snoozeNotificationPrefix2 = "SNOOZE_ALARM_2_"
     case reminderIdentifierPrefix = "REMINDER_"
     
-    // Snooze Buttonsq
+    // Snooze Buttons
     case snoozeAlarmLevel0 = "SNOOZE_ALARM_LEVEL_0"
     case snoozeAlarmLevel1 = "SNOOZE_ALARM_LEVEL_1"
     
@@ -363,6 +363,16 @@ extension NotificationManager {
         print("Disable alarm: \(NotificationKey.snoozeAlarmLevel1.rawValue)")
     }
     
+    /// Disable 30 Min reminder with the id saved in userInfo of Notification
+    func disableReminder(_ uuid: String) {
+        
+        let notificationID = NotificationKey.reminderIdentifierPrefix.rawValue + uuid
+        
+        userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [notificationID])
+        userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [notificationID])
+        print("Disable alarm: \(notificationID)")
+    }
+    
 }
 
 /// Response from notification
@@ -471,4 +481,40 @@ extension NotificationManager {
         
     }
 
+    /// Will handle Notification events if app is in foreground
+    func handleForeground(notification: UNNotification, in view: UIViewController) {
+        
+        let userInfo = notification.request.content.userInfo
+        if let uuid = userInfo[NotificationKey.alarmUUIDTag.rawValue] as? String {
+            
+            switch notification.request.content.categoryIdentifier {
+            case NotificationKey.reminderCategoryID.rawValue:
+                // Present RAK Action Sheet
+                
+                print(view)
+                
+                view.dismiss(animated: true) {
+                    self.disableReminder(uuid)
+                    view.presentActionAlertController()
+                }
+                
+//                view.presentActionAlertController()
+                
+                
+                
+                
+            default:
+                if let alarm = am.fetchAlarm(with: uuid) {
+                    disable(alarm: alarm)
+                    print("Disable")
+                }
+            }
+
+            
+        }
+            
+        
+        
+    }
+    
 }

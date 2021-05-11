@@ -15,10 +15,6 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     let am = AlarmManager()
     let nm = NotificationManager()
-    
-    var warningMode = false
-    
-//    var alarms = [OldAlarm]()
     var editingIndexPath: IndexPath?
     
     
@@ -220,10 +216,9 @@ extension AlarmsViewController {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
+        nm.handleForeground(notification: notification, in: self)
+        
         completionHandler([.alert, .badge, .sound])
-        
-        
-        
     }
     
 }
