@@ -30,6 +30,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         presentActionAlertController()
 
+        
     }
     
     func config() {

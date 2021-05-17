@@ -46,6 +46,12 @@ enum NotificationKey: String {
     case originalTime = "ORIGINAL_TIME"
 }
 
+enum NotificationSounds: String {
+    case low = "Alarm_Low.m4a"
+    case high = "Alarm_High.m4a"
+    case evil = "sound.mp3"
+}
+
 
 class NotificationManager {
     
@@ -182,7 +188,7 @@ extension NotificationManager {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: alarmDate)
         components.second = 0
         
-        let sound = UNNotificationSound.default
+        let sound = UNNotificationSound(named: UNNotificationSoundName(NotificationSounds.low.rawValue))
         content.sound = sound
         
         
@@ -246,18 +252,20 @@ extension NotificationManager {
             content.categoryIdentifier = NotificationKey.snoozeAlarmLevel1ID.rawValue
             content.body = NotificationKey.snoozeBody1.rawValue
             
-            let sound = UNNotificationSound.defaultCriticalSound(withAudioVolume: 0.5)
+            let sound = UNNotificationSound(named: UNNotificationSoundName(NotificationSounds.high.rawValue))
             content.sound = sound
             
             addNotification(components: components,
                             identifier: (NotificationKey.snoozeNotificationPrefix.rawValue + uuid),
                             content: content)
             
+            
+            
         case 2:
             content.categoryIdentifier = NotificationKey.snoozeAlarmLevel2ID.rawValue
             content.body = NotificationKey.snoozeBody2.rawValue
             
-            let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: "sound.mp3"), withAudioVolume: 0.8)
+            let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: NotificationSounds.evil.rawValue), withAudioVolume: 1.0)
             content.sound = sound
             
             addNotification(components: components,
@@ -288,12 +296,11 @@ extension NotificationManager {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderTime)
         components.second = 0
         
-//        MPVolumeView.setVolume(0.1)
-        let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: "sound.mp3"), withAudioVolume: 0.1)
-        let defaultSound = UNNotificationSound.defaultCriticalSound(withAudioVolume: 0.1)
+
+        let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: NotificationSounds.evil.rawValue), withAudioVolume: 1.0)
         
         
-        content.sound = defaultSound
+        content.sound = sound
         
         addNotification(components: components,
                         identifier: NotificationKey.reminderIdentifierPrefix.rawValue + uuid,
