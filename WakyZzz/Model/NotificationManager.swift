@@ -288,10 +288,12 @@ extension NotificationManager {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderTime)
         components.second = 0
         
-        MPVolumeView.setVolume(0.1)
+//        MPVolumeView.setVolume(0.1)
         let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: "sound.mp3"), withAudioVolume: 0.1)
-         
-        content.sound = sound
+        let defaultSound = UNNotificationSound.defaultCriticalSound(withAudioVolume: 0.1)
+        
+        
+        content.sound = defaultSound
         
         addNotification(components: components,
                         identifier: NotificationKey.reminderIdentifierPrefix.rawValue + uuid,
@@ -443,7 +445,6 @@ extension NotificationManager {
             
         case NotificationKey.stopSnoozeAlarmLevel2.rawValue:
             
-            // MARK: Play Evil Sound
             guard let view = view as? AlarmsViewController else { break }
             view.presentActionAlertController()
             

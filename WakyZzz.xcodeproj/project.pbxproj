@@ -61,6 +61,8 @@
 		606228D926434B1400CB3B4C /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
 		60CC88732646F56F0089E361 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPVolumeView+EXT.swift"; sourceTree = "<group>"; };
+		60D80F152652C992004572BB /* Alert_Low.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alert_Low.m4a; sourceTree = "<group>"; };
+		60D80F162652C992004572BB /* Alert_High.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alert_High.m4a; sourceTree = "<group>"; };
 		60F5A64126444FE500B03E0C /* CoredataCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoredataCoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,6 +139,8 @@
 		60B8939A26361DD9009D864F /* Support Files  */ = {
 			isa = PBXGroup;
 			children = (
+				60D80F162652C992004572BB /* Alert_High.m4a */,
+				60D80F152652C992004572BB /* Alert_Low.m4a */,
 				0424EB5A20BEF89100E15E46 /* Assets.xcassets */,
 				0424EB7020C038AE00E15E46 /* sound.mp3 */,
 				0424EB5320BEF89000E15E46 /* AppDelegate.swift */,
