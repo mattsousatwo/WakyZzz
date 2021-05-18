@@ -10,13 +10,14 @@ import Foundation
 import UIKit
 import MessageUI
 
+
 // Phone Call
 class MessageCenter: NSObject {
     
     let nm = NotificationManager()
     
     // Call Phone number
-    func call(number phoneNumber: Int) {
+    func call(number phoneNumber: String) {
         guard let number = URL(string: "tel://\(phoneNumber)") else { return }
         UIApplication.shared.open(number, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
             if success == true {
@@ -75,7 +76,6 @@ extension MessageCenter: MFMailComposeViewControllerDelegate {
             print("Email canceled")
             
             controller.dismiss(animated: true) {
-                
                 view?.presentCancelAlert()
             }
             

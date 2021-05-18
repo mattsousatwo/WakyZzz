@@ -8,6 +8,7 @@
 
 import UIKit
 import UserNotifications
+import Contacts
 
 class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AlarmCellDelegate, AlarmViewControllerDelegate, UNUserNotificationCenterDelegate {
     
@@ -37,6 +38,12 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.delegate = self
         tableView.dataSource = self
+
+        let contactControl = ContactControl()
+
+        contactControl.requestAccess(in: self)
+
+        
         
         populateAlarms()
         

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+//import Contacts
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Find SQL Database
         let URLS = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         print("\n~ SQL: \(URLS[URLS.count-1] as URL) \n~ \n~")
+        
+//
+//
+//        CNContactStore().requestAccess(for: .contacts) { (access, error) in
+//            print(access)
+//        }
         
         return true
     }
