@@ -25,6 +25,8 @@
 		606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D926434B1400CB3B4C /* AlarmManager.swift */; };
 		6064A889265474B900251FA6 /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6064A888265474B900251FA6 /* ActionControl.swift */; };
 		6064A88D265474C300251FA6 /* ContactsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6064A88C265474C300251FA6 /* ContactsControl.swift */; };
+		6073DAF02655C17F00D497E4 /* Alert_High.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 60D80F162652C992004572BB /* Alert_High.m4a */; };
+		6073DAF32655C18200D497E4 /* Alert_Low.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 60D80F152652C992004572BB /* Alert_Low.m4a */; };
 		60CC88742646F56F0089E361 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CC88732646F56F0089E361 /* MessageCenter.swift */; };
 		60CEFA8B264AE4D80031AC57 /* MPVolumeView+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */; };
 		60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F5A64126444FE500B03E0C /* CoredataCoder.swift */; };
@@ -269,8 +271,10 @@
 			files = (
 				0424EB7120C038AE00E15E46 /* sound.mp3 in Resources */,
 				0424EB5E20BEF89100E15E46 /* LaunchScreen.storyboard in Resources */,
+				6073DAF32655C18200D497E4 /* Alert_Low.m4a in Resources */,
 				0424EB5B20BEF89100E15E46 /* Assets.xcassets in Resources */,
 				0424EB5920BEF89000E15E46 /* Main.storyboard in Resources */,
+				6073DAF02655C17F00D497E4 /* Alert_High.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

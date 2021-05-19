@@ -9,6 +9,7 @@
 import UIKit
 import UserNotifications
 import Contacts
+import AVFoundation
 
 class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AlarmCellDelegate, AlarmViewControllerDelegate, UNUserNotificationCenterDelegate {
     
@@ -30,9 +31,23 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         config()
+        
+        var player: AVAudioPlayer?
+        print("Play Sound")
+        let path = Bundle.main.path(forResource: "Alert_Low.m4a", ofType: nil)!
+        let url = URL(fileURLWithPath: path)
+        print("Play Sound 1 ")
+        do {
+            player = try AVAudioPlayer(contentsOf: url)
+            player?.play()
+        } catch {
+            print(error)
+        }
 
+        
+        
 //        presentActionAlertController()
-
+        
         
     }
     

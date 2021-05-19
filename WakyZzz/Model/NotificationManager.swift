@@ -47,8 +47,8 @@ enum NotificationKey: String {
 }
 
 enum NotificationSounds: String {
-    case low = "Alarm_Low.m4a"
-    case high = "Alarm_High.m4a"
+    case low = "Alert_Low.m4a"
+    case high = "Alert_High.m4a"
     case evil = "sound.mp3"
 }
 
@@ -188,11 +188,11 @@ extension NotificationManager {
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: alarmDate)
         components.second = 0
         
-        let sound = UNNotificationSound(named: UNNotificationSoundName(NotificationSounds.low.rawValue))
+//        let sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: NotificationSounds.low.rawValue))
+        let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: NotificationSounds.low.rawValue), withAudioVolume: 1.0)
+        
+//        let sounds = UNNotificationSound.default
         content.sound = sound
-        
-        
-
         
         switch alarm.selectedDays.count {
         case 0:
@@ -301,7 +301,6 @@ extension NotificationManager {
         
 
         let sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName(rawValue: NotificationSounds.evil.rawValue), withAudioVolume: 1.0)
-        
         
         content.sound = sound
         
@@ -504,14 +503,13 @@ extension NotificationManager {
                 
                 print(view)
                 
+                
+                
+                
                 view.dismiss(animated: true) {
                     self.disableReminder(uuid)
                     view.presentActionAlertController()
                 }
-                
-//                view.presentActionAlertController()
-                
-                
                 
                 
             default:

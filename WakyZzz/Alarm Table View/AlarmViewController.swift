@@ -27,6 +27,7 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let am = AlarmManager()
     let nm = NotificationManager()
     var alarm: Alarm?
+    var clearAlarms: Bool = true
     
     var delegate: AlarmViewControllerDelegate?
     
@@ -39,8 +40,12 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        clearCreatedAlarm()
+        if clearAlarms == true {
+            clearCreatedAlarm()
+        }
+        
     }
+
     
     func config() {        
         if alarm == nil {
@@ -139,12 +144,16 @@ class AlarmViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func doneButtonPress(_ sender: Any) {
         guard let alarm = alarm else { return }
+        clearAlarms = false
         delegate?.alarmViewControllerDone(alarm: alarm)
         delegate?.sortAlarmsByTime()
         nm.disable(alarm: alarm)
         am.update(alarm: alarm, enabled: true)
         nm.schedualeNotifications(for: alarm)
-        presentingViewController?.dismiss(animated: true, completion: nil)
+        presentingViewController?.dismiss(animated: true, completion: {
+            self.clearAlarms = true
+        })
+        
     }
     @IBAction func datePickerValueChanged(_ sender: Any) {
         am.setTime(alarm: alarm, time: datePicker.date)
