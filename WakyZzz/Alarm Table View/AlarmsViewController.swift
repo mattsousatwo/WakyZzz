@@ -16,7 +16,9 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     let am = AlarmManager()
     let nm = NotificationManager()
+    let ac = ActionControl()
     var editingIndexPath: IndexPath?
+    
     
     
     // Add new Alarm
@@ -39,10 +41,15 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
 
-        let contactControl = ContactControl()
+//        let contactControl = ContactControl()
+//
+//        contactControl.requestAccess(in: self) { (numbersArray) in
+////            if let first = numbersArray.first {
+////                self.randomNumber = first
+////            }
+//        }
 
-        contactControl.requestAccess(in: self)
-
+        ac.configure(self)
         
         
         populateAlarms()

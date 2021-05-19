@@ -120,6 +120,17 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
                                         self.dismiss(animated: true)
                                       }))
         
+        // If on iPad
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = self.view
+            let bounds = self.view.bounds
+            popoverController.sourceRect = CGRect(x: bounds.minX,
+                                                  y: bounds.midY,
+                                                  width: bounds.width,
+                                                  height: bounds.height)
+            popoverController.permittedArrowDirections = []
+        }
+        
         self.present(alert, animated: true)
         
     }

@@ -7,27 +7,44 @@
 //
 
 import Foundation
+import UIKit
 
 
-class ActionControl {
+class ActionControl: ContactControl {
     
-    let cc = ContactControl()
+    func configure(_ view: UIViewController) {
+        requestAccess(in: view) { (phoneNumbers) in
+            if let firstNumber = phoneNumbers.first {
+                
+                let call = Action(title: "Random Call",
+                                  message: "Call a random Person",
+                                  phoneNumber: firstNumber,
+                                  email: nil,
+                                  type: .call)
+                self.allActions.append(call)
+                
+                
+                
+                
+                
+            }
+        }
+    }
+    
+    var allActions: [Action] = []
+    
     
     
     // List of all actions
-    var allActions: [Action] {
-        var actions: [Action] = []
-        
-        // Cannot get Random person contact
-        if let randomContactInfo = cc.getRandomContactInfo() {
-            if let phoneNumbers = cc.getPhoneNumber(from: randomContactInfo) {
-                if let firstNumber = phoneNumbers.first {
-                    let randomCall = Action(title: "Random Call", message: "Call a random Person", phoneNumber: firstNumber, email: nil, type: .call)
-                    actions.append(randomCall)
-                }
-            }
-        }
-        
+//    var allActions: [Action] {
+//        var actions: [Action] = []
+//
+//        // Cannot get Random person contact
+//        if let randomNumber = randomNumber {
+//            let randomCall = Action(title: "Random Call", message: "Call a random Person", phoneNumber: randomNumber, email: nil, type: .call)
+//            actions.append(randomCall)
+//        }
+//
         // Calls
 //        let callOne = Action(title: "Call a Friend", message: "Call a Friend", phoneNumber: nil, type: .call)
 //        actions.append(callOne)
@@ -39,9 +56,9 @@ class ActionControl {
 //        // Emails
 //        let emailOne = Action(title: "Email a Friend", message: "Hello, how are things going?", email: "mattsousatwo@gmail.com", type: .email)
 //        actions.append(emailOne)
-        
-        return actions
-    }
+//
+//        return actions
+//    }
 
     /// Randomly select two actions
     func shuffleActions() -> (actOne: Action?, actTwo: Action?) {

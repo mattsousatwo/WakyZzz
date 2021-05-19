@@ -14,12 +14,14 @@ class ContactControl {
     
     var contactList: [CNContact] = []
     let contactStore = CNContactStore()
+    var number: [String]?
+    
     
     var authorizationStatus: CNAuthorizationStatus {
         return CNContactStore.authorizationStatus(for: .contacts)
     }
     
-    func requestAccess(in view: UIViewController) {
+    func requestAccess(in view: UIViewController, completion: @escaping ([String]) -> Void) {
         switch CNContactStore.authorizationStatus(for: .contacts) {
         case .authorized:
             
@@ -29,6 +31,8 @@ class ContactControl {
                 print("Contact name: \(randomContact.givenName)")
                 if let phoneNumber = self.getPhoneNumber(from: randomContact) {
                     print("Contact name: \(randomContact.givenName), \(phoneNumber)")
+                    number = phoneNumber
+                    completion(phoneNumber)
                 }
                 
             }
@@ -71,6 +75,17 @@ class ContactControl {
                                       handler: { (action) in
                                         alert.dismiss(animated: true)
                                       }))
+        
+        // If on iPad
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = view.view
+            let bounds = view.view.bounds
+            popoverController.sourceRect = CGRect(x: bounds.minX,
+                                                  y: bounds.midY,
+                                                  width: bounds.width,
+                                                  height: bounds.height)
+            popoverController.permittedArrowDirections = []
+        }
         
         view.present(alert, animated: true)
         
