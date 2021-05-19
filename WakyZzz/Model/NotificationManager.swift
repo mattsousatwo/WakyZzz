@@ -192,7 +192,9 @@ extension NotificationManager {
         content.sound = sound
         
         
-        switch alarm.decodedRepeatingDays.count {
+
+        
+        switch alarm.selectedDays.count {
         case 0:
             
             addNotification(components: components,
@@ -205,7 +207,8 @@ extension NotificationManager {
             components.year = nil
             components.month = nil
             components.day = nil
-            for (day, _) in alarm.decodedRepeatingDays {
+            
+            for (day, _) in alarm.selectedDays {
                 components.weekday = day.value
                 
                 addNotification(components: components,

@@ -93,6 +93,17 @@ public class Alarm: NSManagedObject {
         return days
     }
     
+    // Dictionary of days that repeat 
+    var selectedDays : [Day : Bool] {
+        var days: [Day: Bool] = [:]
+        for (day, value) in self.decodedRepeatingDays {
+            if self.decodedRepeatingDays[day] == true {
+                days[day] = value
+            }
+        }
+        return days
+    }
+    
     // Set new day to value
     func set(_ day: Day, repeat value: Bool) {
         var control: [Day : Bool] = [.sunday: false,
