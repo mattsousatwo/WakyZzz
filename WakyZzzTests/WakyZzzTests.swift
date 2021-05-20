@@ -231,7 +231,7 @@ class ActionContactTests: XCTestCase {
     
     func testCreation() {
         
-        manager.createNewActionContact(type: .email, contactInfo: "myEmailAddress@mail.com", uuid: testID)
+        manager.createNewActionContact(contactInfo: "myEmailAddress@mail.com", uuid: testID, type: .email)
         manager.fetchAllActionContacts()
         
         XCTAssertTrue(manager.savedActionContacts.count != 0 )
@@ -241,6 +241,16 @@ class ActionContactTests: XCTestCase {
         manager.fetchAllActionContacts()
         manager.deleteActionContact(uuid: deletionID)
         manager.savedActionContacts.removeAll()
+        manager.fetchAllActionContacts()
+        XCTAssertTrue(manager.savedActionContacts.count == 0, "Failed because savedActionContacts.count = \(manager.savedActionContacts.count)" )
+    }
+    
+    
+    func testDeleteAll() {
+        manager.fetchAllActionContacts()
+        manager.deleteAllActionContacts()
+        manager.savedActionContacts.removeAll()
+        
         manager.fetchAllActionContacts()
         XCTAssertTrue(manager.savedActionContacts.count == 0, "Failed because savedActionContacts.count = \(manager.savedActionContacts.count)" )
     }

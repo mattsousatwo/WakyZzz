@@ -10,7 +10,7 @@ import Foundation
 import Contacts
 import UIKit
 
-class ContactControl {
+class ContactControl: ActionContactManager {
     
     var contactList: [CNContact] = []
     let contactStore = CNContactStore()
@@ -25,7 +25,60 @@ class ContactControl {
         switch CNContactStore.authorizationStatus(for: .contacts) {
         case .authorized:
             
-            self.getContacts()
+            
+            fetchAllActionContacts()
+            // If less than three ActionContactsSaved
+            if savedActionContacts.count < 3 {
+                
+                // Fetch Contact List
+                self.getContacts()
+                
+                // Randomly select x contacts - depending on count of savedActionContacts
+                
+                for type in typesToBeCreated {
+                    
+                    if let randomContact = self.getRandomContactInfo() {
+                        switch type {
+                        case .email:
+                            if let email = self.unwrapEmail(contact: randomContact) {
+                                print("Contact name: \(randomContact.givenName), \(email)")
+                            }
+                            
+                            
+                        case .call, .text:
+                            if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
+                                print("Contact name: \(randomContact.givenName), \(phoneNumber)")
+                                
+                                
+//                                createNewActionContact(type: type,
+//                                                       contactInfo: phoneNumber,
+//                                                       uuid: UUID().uuidString)
+                                
+                                
+                            }
+            
+                        }
+                    }
+                    
+                }
+                
+                // Save one of each Action type - if there are [.email, .call] then provide .text
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            }
+            
+            
+            
+            
+            
+            
             if let randomContact = self.getRandomContactInfo() {
                 print("Contact name: \(randomContact.givenName)")
                 if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
@@ -41,6 +94,10 @@ class ContactControl {
             }
             
                 
+            
+            
+            
+            
             
         
             

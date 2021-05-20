@@ -14,8 +14,6 @@ class ActionControl: ContactControl {
     
     func configure(_ view: UIViewController) {
         requestAccess(in: view) { (phoneNumber) in
-            
-                
                 
                 let call = Action(title: "Random Call",
                                   message: "Call a random Person",

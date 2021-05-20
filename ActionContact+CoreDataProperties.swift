@@ -17,9 +17,13 @@ extension ActionContact {
         return NSFetchRequest<ActionContact>(entityName: "ActionContact")
     }
 
-    @NSManaged public var type: String?
+    @NSManaged public var alarmID: String?
     @NSManaged public var contactInfo: String?
+    @NSManaged public var startDate: String?
+    @NSManaged public var status: String?
+    @NSManaged public var type: String?
     @NSManaged public var uuid: String?
+    
 
 }
 

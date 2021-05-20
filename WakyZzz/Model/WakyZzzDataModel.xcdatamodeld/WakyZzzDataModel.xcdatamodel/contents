@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ActionContact" representedClassName="ActionContact" syncable="YES">
+        <attribute name="alarmID" optional="YES" attributeType="String"/>
         <attribute name="contactInfo" attributeType="String"/>
+        <attribute name="startDate" optional="YES" attributeType="String"/>
+        <attribute name="status" optional="YES" attributeType="String"/>
         <attribute name="type" attributeType="String"/>
         <attribute name="uuid" attributeType="String"/>
     </entity>
@@ -14,7 +17,7 @@
         <attribute name="uuid" attributeType="String"/>
     </entity>
     <elements>
+        <element name="ActionContact" positionX="-54" positionY="36" width="128" height="119"/>
         <element name="Alarm" positionX="-54" positionY="-9" width="128" height="119"/>
-        <element name="ActionContact" positionX="-54" positionY="36" width="128" height="74"/>
     </elements>
 </model>

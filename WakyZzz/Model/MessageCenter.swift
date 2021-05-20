@@ -169,6 +169,7 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
 
 extension UIViewController {
     
+    /// All Action Contacts accesable to UIViewController
     var actionContacts: [ActionContact] {
         let actionCM = ActionContactManager()
         actionCM.fetchAllActionContacts()
@@ -188,6 +189,7 @@ extension UIViewController {
         let alert = UIAlertController(title: "WakyZzz",
                                       message: "Time to complete a Random Act of Kindness.",
                                       preferredStyle: .actionSheet)
+        
         if self.actionContacts.count != 0 {
             if let firstAction = self.actionContacts.first {
                 
