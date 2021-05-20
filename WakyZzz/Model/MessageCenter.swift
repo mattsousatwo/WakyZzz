@@ -168,8 +168,16 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
 }
 
 extension UIViewController {
+    
+    var actionContacts: [ActionContact] {
+        let actionCM = ActionContactManager()
+        actionCM.fetchAllActionContacts()
+        return actionCM.savedActionContacts
+    }
+    
     /// Present Alert Controller to execute Action
     func presentActionAlertController() {
+
         print(#function)
         // Get two random acts of kindness
         let actions = ActionControl()
@@ -180,6 +188,18 @@ extension UIViewController {
         let alert = UIAlertController(title: "WakyZzz",
                                       message: "Time to complete a Random Act of Kindness.",
                                       preferredStyle: .actionSheet)
+        if self.actionContacts.count != 0 {
+            if let firstAction = self.actionContacts.first {
+                
+                alert.addAction(UIAlertAction(title: "Email Contact",
+                                              style: .default,
+                                              handler: { (action) in
+                                                print("\nfirstAction: \(firstAction.contactInfo ?? ""), \(firstAction.uuid ?? "")\n")
+                                              }))
+                
+            }
+        }
+        
         
         if let actionOne = randomAction.actOne {
             alert.addAction(UIAlertAction(title: actionOne.title,

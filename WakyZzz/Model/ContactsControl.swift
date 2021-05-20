@@ -14,25 +14,28 @@ class ContactControl {
     
     var contactList: [CNContact] = []
     let contactStore = CNContactStore()
-    var number: [String]?
+    var number: String?
     
     
     var authorizationStatus: CNAuthorizationStatus {
         return CNContactStore.authorizationStatus(for: .contacts)
     }
     
-    func requestAccess(in view: UIViewController, completion: @escaping ([String]) -> Void) {
+    func requestAccess(in view: UIViewController, completion: @escaping (String) -> Void) {
         switch CNContactStore.authorizationStatus(for: .contacts) {
         case .authorized:
-            
             
             self.getContacts()
             if let randomContact = self.getRandomContactInfo() {
                 print("Contact name: \(randomContact.givenName)")
-                if let phoneNumber = self.getPhoneNumber(from: randomContact) {
+                if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
                     print("Contact name: \(randomContact.givenName), \(phoneNumber)")
                     number = phoneNumber
                     completion(phoneNumber)
+                }
+                
+                if let email = self.unwrapEmail(contact: randomContact) {
+                    print("Contact name: \(randomContact.givenName), \(email)")
                 }
                 
             }
@@ -91,35 +94,6 @@ class ContactControl {
         
     }
     
-    
-    
-    // Get a list of all Contacts with phone numbers
-    func getListOfContactNumbers() {
-        
-        let keys = [CNContactFormatter.descriptorForRequiredKeys(for: .fullName)]
-        let request = CNContactFetchRequest(keysToFetch: keys)
-        
-        let contactStore = CNContactStore()
-        
-        if authorizationStatus == .authorized {
-            do {
-                try contactStore.enumerateContacts(with: request) { (contact, stop) in
-                    
-                    
-                    if contact.phoneNumbers.count != 0 {
-                        self.contactList.append(contact)
-                    }
-                    
-                    self.getContacts()
-                }
-            } catch {
-                print(error)
-            }
-        }
-        print("Contacts Count: \(self.contactList.count)")
-        
-    }
-    
     // get a random contact from the list of contacts
     func getRandomContactInfo() -> CNContact? {
         if contactList.count != 0 {
@@ -129,18 +103,7 @@ class ContactControl {
         return nil
     }
     
-    // unwrap first phone number from contact
-    func getPhoneNumber(from contact: CNContact) -> [String]? {
-        var numbers: [String]?
-        for phoneNumber in contact.phoneNumbers {
-            let number = phoneNumber.value
-            numbers?.append(number.stringValue)
-        }
-        return numbers
-    }
-    
     func getContacts() {
-        
         let keys = [CNContactFormatter.descriptorForRequiredKeys(for: .fullName), CNContactPhoneNumbersKey, CNContactEmailAddressesKey] as [Any]
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
         do {
@@ -148,21 +111,48 @@ class ContactControl {
                 
                 self.contactList.append(contact)
                 for phoneNumber in contact.phoneNumbers {
-                    if let number = phoneNumber.value as? CNPhoneNumber, let label = phoneNumber.label {
+                    if let label = phoneNumber.label {
+                        let number = phoneNumber.value
                         let localizedLable = CNLabeledValue<CNPhoneNumber>.localizedString(forLabel: label)
-                        
                         print("Contacts.count: \(self.contactList.count), name: \(contact.givenName), tel: \(localizedLable) - \(number.stringValue)  ")
-                        
-                        
                     }
                 }
-                
-                
             }
         } catch {
             print(error)
         }
-
-        
     }
+    
+    /// Unwrap first phone number from contact
+    func unwrapPhoneNumbers(contact: CNContact) -> String? {
+        var numbers: [CNPhoneNumber] = []
+        for phoneNumber in contact.phoneNumbers {
+            let number = phoneNumber.value
+            numbers.append(number)
+        }
+        if numbers.count == 0 {
+            return nil
+        } else {
+            let randomIndex = Int.random(in: 0..<numbers.count)
+            return "\(numbers[randomIndex].stringValue)"
+        }
+    }
+    
+    
+    /// Unwrap first email address from contact
+    func unwrapEmail(contact: CNContact) -> String? {
+        var emails: [String] = []
+        for email in contact.emailAddresses {
+            let address = email.value
+            emails.append(address as String)
+        }
+        if emails.count == 0 {
+            return nil
+        } else {
+            let randomIndex = Int.random(in: 0..<emails.count)
+            return "\(emails[randomIndex])"
+        }
+    }
+    
+    
 }

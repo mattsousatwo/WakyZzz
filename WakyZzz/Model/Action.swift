@@ -8,8 +8,10 @@
 
 import Foundation
 
-enum ActionType {
-    case text, call, email
+enum ActionType: String {
+    case text = "TEXT_ACTION"
+    case call = "CALL_ACTION"
+    case email = "EMAIL_ACTION"
 }
 
 class Action: Equatable {

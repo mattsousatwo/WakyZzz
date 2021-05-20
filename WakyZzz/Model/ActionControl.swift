@@ -13,12 +13,13 @@ import UIKit
 class ActionControl: ContactControl {
     
     func configure(_ view: UIViewController) {
-        requestAccess(in: view) { (phoneNumbers) in
-            if let firstNumber = phoneNumbers.first {
+        requestAccess(in: view) { (phoneNumber) in
+            
+                
                 
                 let call = Action(title: "Random Call",
                                   message: "Call a random Person",
-                                  phoneNumber: firstNumber,
+                                  phoneNumber: phoneNumber,
                                   email: nil,
                                   type: .call)
                 self.allActions.append(call)
@@ -27,7 +28,7 @@ class ActionControl: ContactControl {
                 
                 
                 
-            }
+            
         }
     }
     

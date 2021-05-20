@@ -205,7 +205,7 @@ class AlarmManagerTests: XCTestCase {
     
 }
 
-class Action: XCTestCase {
+class ActionTests: XCTestCase {
     
     let ac = ActionControl()
     
@@ -219,4 +219,31 @@ class Action: XCTestCase {
         
         
     }
+}
+
+class ActionContactTests: XCTestCase {
+    
+    let manager = ActionContactManager()
+    let testID = "ACTION_CONTACT_TEST"
+    var deletionID: String {
+        return (ACMKey.prefix.rawValue + testID)
+    }
+    
+    func testCreation() {
+        
+        manager.createNewActionContact(type: .email, contactInfo: "myEmailAddress@mail.com", uuid: testID)
+        manager.fetchAllActionContacts()
+        
+        XCTAssertTrue(manager.savedActionContacts.count != 0 )
+    }
+    
+    func testDeletion() {
+        manager.fetchAllActionContacts()
+        manager.deleteActionContact(uuid: deletionID)
+        manager.savedActionContacts.removeAll()
+        manager.fetchAllActionContacts()
+        XCTAssertTrue(manager.savedActionContacts.count == 0, "Failed because savedActionContacts.count = \(manager.savedActionContacts.count)" )
+    }
+    
+    
 }
