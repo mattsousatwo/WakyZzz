@@ -30,6 +30,7 @@
 		6073DAF82655CAF600D497E4 /* ActionContact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6073DAF62655CAF600D497E4 /* ActionContact+CoreDataClass.swift */; };
 		6073DAF92655CAF600D497E4 /* ActionContact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6073DAF72655CAF600D497E4 /* ActionContact+CoreDataProperties.swift */; };
 		6073DAFD2655CB0D00D497E4 /* ActionContactManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6073DAFC2655CB0D00D497E4 /* ActionContactManager.swift */; };
+		6079AD4726581A7D00209FCB /* String+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6079AD4626581A7D00209FCB /* String+EXT.swift */; };
 		60CC88742646F56F0089E361 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CC88732646F56F0089E361 /* MessageCenter.swift */; };
 		60CEFA8B264AE4D80031AC57 /* MPVolumeView+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */; };
 		60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F5A64126444FE500B03E0C /* CoredataCoder.swift */; };
@@ -71,6 +72,7 @@
 		6073DAF62655CAF600D497E4 /* ActionContact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionContact+CoreDataClass.swift"; sourceTree = "<group>"; };
 		6073DAF72655CAF600D497E4 /* ActionContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionContact+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		6073DAFC2655CB0D00D497E4 /* ActionContactManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionContactManager.swift; sourceTree = "<group>"; };
+		6079AD4626581A7D00209FCB /* String+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+EXT.swift"; sourceTree = "<group>"; };
 		60CC88732646F56F0089E361 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPVolumeView+EXT.swift"; sourceTree = "<group>"; };
 		60D80F152652C992004572BB /* Alert_Low.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alert_Low.m4a; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				60CEFA8A264AE4D80031AC57 /* MPVolumeView+EXT.swift */,
 				6064A888265474B900251FA6 /* ActionControl.swift */,
 				6064A88C265474C300251FA6 /* ContactsControl.swift */,
+				6079AD4626581A7D00209FCB /* String+EXT.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				606228D426434A4200CB3B4C /* Alarm+CoreDataClass.swift in Sources */,
 				0424EB5420BEF89000E15E46 /* AppDelegate.swift in Sources */,
 				604B4BBB26386AC40022DCCC /* NotificationManager.swift in Sources */,
+				6079AD4726581A7D00209FCB /* String+EXT.swift in Sources */,
 				0424EB6B20BEF96400E15E46 /* Action.swift in Sources */,
 				6073DAF92655CAF600D497E4 /* ActionContact+CoreDataProperties.swift in Sources */,
 				0424EB6920BEF93F00E15E46 /* OldAlarm.swift in Sources */,
@@ -522,7 +526,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SPUKTJZVPR;
 				INFOPLIST_FILE = WakyZzzTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -547,7 +551,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SPUKTJZVPR;
 				INFOPLIST_FILE = WakyZzzTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

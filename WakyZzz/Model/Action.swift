@@ -19,14 +19,14 @@ class Action: Equatable {
         return lhs.uuid == rhs.uuid
     }
     
-    var title: String
+    var title: String?
     var message: String? = nil
     var phoneNumber: String? = nil
     var email: String? = nil
     var type: ActionType = .text
     var uuid = UUID().uuidString
     
-    init(title: String, message: String? = nil, phoneNumber: String? = nil, email: String? = nil, type: ActionType) {
+    init(title: String?, message: String? = nil, phoneNumber: String? = nil, email: String? = nil, type: ActionType) {
         self.title = title
         self.message = message
         self.phoneNumber = phoneNumber

@@ -18,7 +18,11 @@ class MessageCenter: NSObject {
     
     // Call Phone number
     func call(number phoneNumber: String) {
-        guard let number = URL(string: "tel://\(phoneNumber)") else { return }
+        
+        let optionalPhoneNumber = phoneNumber.convertToPhoneNumber()
+        guard let phone = optionalPhoneNumber else { return }
+        
+        guard let number = URL(string: "tel://\(phone)") else { return }
         UIApplication.shared.open(number, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
             if success == true {
                 print("Success")
@@ -31,10 +35,10 @@ class MessageCenter: NSObject {
     
     
     /// Create Message View Controller with preset body
-    func createComposeMessageView(in view: UIViewController) {
+    func createComposeMessageView(to recipient: String, in view: UIViewController) {
         let messageVC = MFMessageComposeViewController()
         messageVC.body = "You look amazing today!"
-        messageVC.recipients = []
+        messageVC.recipients = [recipient]
         messageVC.messageComposeDelegate = view
         
         if MFMessageComposeViewController.canSendText() {
@@ -50,9 +54,8 @@ class MessageCenter: NSObject {
 extension MessageCenter: MFMailComposeViewControllerDelegate {
     
     // Create an email from action parameters
-    func sendEmail(with action: Action, in view: UIViewController) {
-        guard let recipient = action.email else { return }
-        guard let body = action.message else { return }
+    func sendEmail(to recipient: String, in view: UIViewController) {
+        let body = "Hello, How are you?"
         
         if MFMailComposeViewController.canSendMail() {
             let mailVC = MFMailComposeViewController()
@@ -181,70 +184,29 @@ extension UIViewController {
 
         print(#function)
         // Get two random acts of kindness
-        let actions = ActionControl()
-        let randomAction = actions.shuffleActions()
-        let messageCenter = MessageCenter()
+        let actionContact = ActionContactManager()
+        let randomContact = actionContact.shuffleContacts()
         let nm = NotificationManager()
         
         let alert = UIAlertController(title: "WakyZzz",
                                       message: "Time to complete a Random Act of Kindness.",
                                       preferredStyle: .actionSheet)
         
+        
         if self.actionContacts.count != 0 {
-            if let firstAction = self.actionContacts.first {
+            if let actOne = randomContact.actOne {
                 
-                alert.addAction(UIAlertAction(title: "Email Contact",
-                                              style: .default,
-                                              handler: { (action) in
-                                                print("\nfirstAction: \(firstAction.contactInfo ?? ""), \(firstAction.uuid ?? "")\n")
-                                              }))
-                
+                let alertOne = createAlertAction(with: actOne)
+                alert.addAction(alertOne)
+    
+            }
+            
+            if let actTwo = randomContact.actTwo {
+                let alertTwo = createAlertAction(with: actTwo)
+                alert.addAction(alertTwo)
             }
         }
         
-        
-        if let actionOne = randomAction.actOne {
-            alert.addAction(UIAlertAction(title: actionOne.title,
-                                          style: .default,
-                                          handler: { (action) in
-                                            
-                                            switch actionOne.type {
-                                            case .call:
-                                                if let phoneNumber = actionOne.phoneNumber {
-                                                    messageCenter.call(number: phoneNumber)
-                                                }
-                                                break
-                                            case .email:
-                                                messageCenter.sendEmail(with: actionOne, in: self)
-                                                break
-                                            case .text:
-                                                messageCenter.createComposeMessageView(in: self)
-                                                break
-                                            }
-                           
-                                          }))
-        }
-        
-        if let actionTwo = randomAction.actTwo {
-            alert.addAction(UIAlertAction(title: actionTwo.title,
-                                          style: .default,
-                                          handler: { (action) in
-                                            
-                                            switch actionTwo.type {
-                                            case .call:
-                                                if let phoneNumber = actionTwo.phoneNumber {
-                                                    messageCenter.call(number: phoneNumber)
-                                                }
-                                                break
-                                            case .email:
-                                                messageCenter.sendEmail(with: actionTwo, in: self)
-                                                break
-                                            case .text:
-                                                messageCenter.createComposeMessageView(in: self)
-                                            }
-
-                                          }))
-        }
         
         alert.addAction(UIAlertAction(title: "Cancel",
                                       style: .cancel,
@@ -268,6 +230,51 @@ extension UIViewController {
         self.present(alert, animated: true)
         
     }
+    
+    func createAlertAction(with contact: ActionContact) -> UIAlertAction {
+        let messageCenter = MessageCenter()
+
+        var title: String {
+            switch contact.type {
+            case ActionType.email.rawValue:
+                return "Email Friend"
+            case ActionType.call.rawValue:
+                return "Call Friend"
+            case ActionType.text.rawValue:
+                return "Text Friend"
+            default:
+                return "UNDEFINED"
+            }
+        }
+        let alert = UIAlertAction(title: title,
+                                      style: .default,
+                                      handler: { (action) in
+                                        
+                                        switch contact.type {
+                                        case ActionType.call.rawValue:
+                                            if let phoneNumber = contact.contactInfo {
+                                                messageCenter.call(number: phoneNumber)
+                                            }
+                                            break
+                                        case ActionType.email.rawValue:
+                                            if let email = contact.contactInfo {
+                                                messageCenter.sendEmail(to: email, in: self)
+                                            }
+                                            break
+                                        case ActionType.text.rawValue:
+                                            if let phoneNumber = contact.contactInfo {
+                                                messageCenter.createComposeMessageView(to: phoneNumber, in: self)
+                                            }
+                                            break
+                                        default:
+                                            break
+                                        }
+                       
+                                      })
+        return alert
+    }
+    
+    
 }
 
 // Helper function inserted by Swift 4.2 migrator.

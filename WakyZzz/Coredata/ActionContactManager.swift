@@ -48,9 +48,7 @@ extension ActionContactManager {
         var calls = 0
         var texts = 0
         
-        if savedActionContacts.count == 0 {
-            fetchAllActionContacts()
-        }
+        refreshActionContacts()
         
         for contact in savedActionContacts {
             if contact.status != ActionStatus.active.rawValue ||
@@ -74,6 +72,22 @@ extension ActionContactManager {
         return (emails, calls, texts)
     }
     
+    // All ActionContacts with status as .active or .inactive
+    var incompleteActions: [ActionContact] {
+        refreshActionContacts()
+        var contacts: [ActionContact] = []
+        
+        for contact in savedActionContacts {
+            if contact.status == ActionStatus.active.rawValue ||
+                contact.status == ActionStatus.inactive.rawValue {
+                contacts.append(contact)
+            }
+        }
+        return contacts
+    }
+    
+   
+    
     
     /// Types of actions that need to be created to store one of each ActionType for selection
     var typesToBeCreated: [ActionType] {
@@ -94,6 +108,37 @@ extension ActionContactManager {
         
         return types
     }
+    
+    /// Randomly select two actions
+    func shuffleContacts() -> (actOne: ActionContact?, actTwo: ActionContact?) {
+        var actionOne: ActionContact?
+        var actionTwo: ActionContact?
+        
+        refreshActionContacts()
+        
+        switch incompleteActions.count {
+        case 0:
+            actionOne = nil
+            actionTwo = nil
+        case 1:
+            actionOne = incompleteActions.first
+            actionTwo = nil
+        case 2:
+            actionOne = incompleteActions.first
+            actionTwo = incompleteActions.last
+        default:
+            let randomInt = Int.random(in: 0..<incompleteActions.count)
+            var randomIntTwo = Int.random(in: 0..<incompleteActions.count)
+            while randomIntTwo == randomInt {
+                randomIntTwo = Int.random(in: 0..<incompleteActions.count)
+            }
+            actionOne = incompleteActions[randomInt]
+            actionTwo = incompleteActions[randomIntTwo]
+        }
+
+        return (actOne: actionOne, actTwo: actionTwo)
+    }
+
     
     
     
@@ -186,6 +231,7 @@ extension ActionContactManager {
     
 }
 
+// Fetching
 extension ActionContactManager {
     
     func fetchAllActionContacts() {
@@ -226,6 +272,12 @@ extension ActionContactManager {
         }
         
         return nil
+    }
+    
+    func refreshActionContacts() {
+        if savedActionContacts.count == 0 {
+            fetchAllActionContacts()
+        }
     }
     
     

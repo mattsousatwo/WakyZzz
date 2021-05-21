@@ -42,19 +42,25 @@ class ContactControl: ActionContactManager {
                         case .email:
                             if let email = self.unwrapEmail(contact: randomContact) {
                                 print("Contact name: \(randomContact.givenName), \(email)")
+                                
+                                createNewActionContact(contactInfo: email, type: .email, status: .inactive)
                             }
                             
                             
-                        case .call, .text:
+                        case .call:
                             if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
                                 print("Contact name: \(randomContact.givenName), \(phoneNumber)")
                                 
                                 
-//                                createNewActionContact(type: type,
-//                                                       contactInfo: phoneNumber,
-//                                                       uuid: UUID().uuidString)
+                                createNewActionContact(contactInfo: phoneNumber, type: .call, status: .inactive)
+ 
+                            }
+                            
+                        case .text:
+                            if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
+                                print("Contact name: \(randomContact.givenName), \(phoneNumber)")
                                 
-                                
+                                createNewActionContact(contactInfo: phoneNumber, type: .text, status: .inactive)
                             }
             
                         }
@@ -78,21 +84,21 @@ class ContactControl: ActionContactManager {
             
             
             
-            
-            if let randomContact = self.getRandomContactInfo() {
-                print("Contact name: \(randomContact.givenName)")
-                if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
-                    print("Contact name: \(randomContact.givenName), \(phoneNumber)")
-                    number = phoneNumber
-                    completion(phoneNumber)
-                }
-                
-                if let email = self.unwrapEmail(contact: randomContact) {
-                    print("Contact name: \(randomContact.givenName), \(email)")
-                }
-                
-            }
-            
+//
+//            if let randomContact = self.getRandomContactInfo() {
+//                print("Contact name: \(randomContact.givenName)")
+//                if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
+//                    print("Contact name: \(randomContact.givenName), \(phoneNumber)")
+//                    number = phoneNumber
+//                    completion(phoneNumber)
+//                }
+//
+//                if let email = self.unwrapEmail(contact: randomContact) {
+//                    print("Contact name: \(randomContact.givenName), \(email)")
+//                }
+//
+//            }
+//
                 
             
             
