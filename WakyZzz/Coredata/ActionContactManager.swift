@@ -86,7 +86,33 @@ extension ActionContactManager {
         return contacts
     }
     
-   
+    // All ActionContacts with status as .complete
+    var completeActions: [ActionContact] {
+        refreshActionContacts()
+        var contacts: [ActionContact] = []
+        
+        for contact in savedActionContacts {
+            if contact.status == ActionStatus.complete.rawValue {
+                contacts.append(contact)
+            }
+        }
+        return contacts
+    }
+
+    // All ActionContacts with status as .active
+    var activeActions: [ActionContact] {
+        refreshActionContacts()
+        var contacts: [ActionContact] = []
+        
+        for contact in savedActionContacts {
+            if contact.status == ActionStatus.active.rawValue {
+                contacts.append(contact)
+            }
+        }
+        return contacts
+    }
+
+    
     
     
     /// Types of actions that need to be created to store one of each ActionType for selection

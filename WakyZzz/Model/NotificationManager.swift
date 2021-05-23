@@ -53,14 +53,15 @@ enum NotificationSounds: String {
 }
 
 
-class NotificationManager {
+class NotificationManager: ContactControl {
     
     let am = AlarmManager()
     let userNotificationCenter = UNUserNotificationCenter.current()
     let formatter = DateFormatter()
     let calendar = NSCalendar.current
     
-    init() {
+    override init() {
+        super.init()
         requestNotificationAuthorization()
         userNotificationCenter.setNotificationCategories([alarmCategory, snoozeCategory, snoozeCategoryLevel2, remiderCategory])
         formatter.dateStyle = .full
@@ -464,9 +465,55 @@ extension NotificationManager {
             
             
         case NotificationKey.reminderStopAction.rawValue:
-
+            
             guard let view = view as? AlarmsViewController else { break }
-            view.presentActionAlertController()
+            let mc = MessageCenter()
+            
+            if activeActions.count != 0 {
+                let randomInt = Int.random(in: 0..<activeActions.count)
+                let action = activeActions[randomInt]
+                
+                switch action.type {
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.call(number: phoneNumber)
+                    }
+                case ActionType.email.rawValue:
+                    if let emailAddress = action.contactInfo {
+                        mc.sendEmail(to: emailAddress, in: view)
+                    }
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.createComposeMessageView(to: phoneNumber, in: view)
+                    }
+                default:
+                    view.presentActionAlertController()
+                }
+            } else if incompleteActions.count != 0 {
+                let randomInt = Int.random(in: 0..<incompleteActions.count)
+                let action = incompleteActions[randomInt]
+                
+                switch action.type {
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.call(number: phoneNumber)
+                    }
+                case ActionType.email.rawValue:
+                    if let emailAddress = action.contactInfo {
+                        mc.sendEmail(to: emailAddress, in: view)
+                    }
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.createComposeMessageView(to: phoneNumber, in: view)
+                    }
+                default:
+                    view.presentActionAlertController()
+                }
+
+            }
+            
+
+//            view.presentActionAlertController()
 
             print("Reminder Notification Stop ")
             
@@ -478,9 +525,58 @@ extension NotificationManager {
         
         // Reminder Category
         if response.notification.request.content.categoryIdentifier == NotificationKey.reminderCategoryID.rawValue {
+//
+//            guard let view = view as? AlarmsViewController else { return }
+//            view.presentActionAlertController()
+//
+            
             
             guard let view = view as? AlarmsViewController else { return }
-            view.presentActionAlertController()
+            let mc = MessageCenter()
+            
+            if activeActions.count != 0 {
+                let randomInt = Int.random(in: 0..<activeActions.count)
+                let action = activeActions[randomInt]
+                
+                switch action.type {
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.call(number: phoneNumber)
+                    }
+                case ActionType.email.rawValue:
+                    if let emailAddress = action.contactInfo {
+                        mc.sendEmail(to: emailAddress, in: view)
+                    }
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.createComposeMessageView(to: phoneNumber, in: view)
+                    }
+                default:
+                    view.presentActionAlertController()
+                }
+            } else if incompleteActions.count != 0 {
+                let randomInt = Int.random(in: 0..<incompleteActions.count)
+                let action = incompleteActions[randomInt]
+                
+                switch action.type {
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.call(number: phoneNumber)
+                    }
+                case ActionType.email.rawValue:
+                    if let emailAddress = action.contactInfo {
+                        mc.sendEmail(to: emailAddress, in: view)
+                    }
+                case ActionType.call.rawValue:
+                    if let phoneNumber = action.contactInfo {
+                        mc.createComposeMessageView(to: phoneNumber, in: view)
+                    }
+                default:
+                    view.presentActionAlertController()
+                }
+
+            }
+            
             
             clearBadgeNumbers()
             print("Reminder Notification --- Category - Banner was tapped ")

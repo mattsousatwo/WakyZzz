@@ -16,11 +16,7 @@ class ContactControl: ActionContactManager {
     let contactStore = CNContactStore()
     var number: String?
     
-    
-    var authorizationStatus: CNAuthorizationStatus {
-        return CNContactStore.authorizationStatus(for: .contacts)
-    }
-    
+    /// Request Access to useres Contacts - Get Random Contact to add to Saved ActionContacts if less than three are tagged inactive, or active
     func requestAccess(in view: UIViewController, completion: @escaping (String) -> Void) {
         switch CNContactStore.authorizationStatus(for: .contacts) {
         case .authorized:
@@ -32,8 +28,6 @@ class ContactControl: ActionContactManager {
                 
                 // Fetch Contact List
                 self.getContacts()
-                
-                // Randomly select x contacts - depending on count of savedActionContacts
                 
                 for type in typesToBeCreated {
                     
@@ -67,17 +61,7 @@ class ContactControl: ActionContactManager {
                     }
                     
                 }
-                
-                // Save one of each Action type - if there are [.email, .call] then provide .text
-                
-                
-                
-                
-                
-                
-                
-                
-                
+                  
             }
             
             
@@ -122,6 +106,8 @@ class ContactControl: ActionContactManager {
         }
     }
     
+    
+    /// Present Alert Message to warn user that the app requires access to their contacts for full functionality - direct user to WakyZzz Settings Page
     func showSettingsAlert(in view: UIViewController) {
         
         let alert = UIAlertController(title: "WakyZzz",

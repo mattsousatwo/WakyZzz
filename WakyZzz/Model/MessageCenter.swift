@@ -34,7 +34,7 @@ class MessageCenter: NSObject {
     }
     
     
-    /// Create Message View Controller with preset body
+    /// Create Message View Controller
     func createComposeMessageView(to recipient: String, in view: UIViewController) {
         let messageVC = MFMessageComposeViewController()
         messageVC.body = "You look amazing today!"
@@ -48,10 +48,26 @@ class MessageCenter: NSObject {
         }
     }
     
+    // Create an email from action parameters
+    func sendEmail(to recipient: String, in view: UIViewController) {
+        let body = "Hello, How are you?"
+
+        if MFMailComposeViewController.canSendMail() {
+            let mailVC = MFMailComposeViewController()
+            mailVC.mailComposeDelegate = view
+            mailVC.setToRecipients([recipient])
+            mailVC.setMessageBody(body, isHTML: false)
+
+            view.present(mailVC, animated: true)
+        }
+
+    }
+    
 }
 
-// Mail Delegate
-extension MessageCenter: MFMailComposeViewControllerDelegate {
+
+
+extension UIViewController: MFMailComposeViewControllerDelegate {
     
     // Create an email from action parameters
     func sendEmail(to recipient: String, in view: UIViewController) {
@@ -69,9 +85,10 @@ extension MessageCenter: MFMailComposeViewControllerDelegate {
     }
     
     // Handle Mail Events
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        
+    public func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        let nm = NotificationManager()
         let view = controller.presentingViewController
+        print("\nMAIL COMPOSE CONTROLLER")
         
         
         switch result {
@@ -94,7 +111,7 @@ extension MessageCenter: MFMailComposeViewControllerDelegate {
         case .sent:
             print("Email sent")
             controller.dismiss(animated: true) {
-                self.nm.clearBadgeNumbers()
+                nm.clearBadgeNumbers()
             }
         default:
             controller.dismiss(animated: true)
@@ -103,8 +120,7 @@ extension MessageCenter: MFMailComposeViewControllerDelegate {
 }
 
 
-
-// Messages Delegate
+// Text Message Delegate
 extension UIViewController: MFMessageComposeViewControllerDelegate {
     
     // Present Alert Controller to warn of canceling message
@@ -139,7 +155,7 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
     }
 
     
-    /// Handle message controller events
+    /// Handle text message controller events
     public func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
         let nm = NotificationManager()
         
@@ -178,6 +194,8 @@ extension UIViewController {
         actionCM.fetchAllActionContacts()
         return actionCM.savedActionContacts
     }
+    
+    
     
     /// Present Alert Controller to execute Action
     func presentActionAlertController() {
@@ -231,6 +249,7 @@ extension UIViewController {
         
     }
     
+    /// Produce an Action for an alert controller
     func createAlertAction(with contact: ActionContact) -> UIAlertAction {
         let messageCenter = MessageCenter()
 
@@ -258,6 +277,7 @@ extension UIViewController {
                                             break
                                         case ActionType.email.rawValue:
                                             if let email = contact.contactInfo {
+                                                
                                                 messageCenter.sendEmail(to: email, in: self)
                                             }
                                             break
