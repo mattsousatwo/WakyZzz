@@ -466,52 +466,8 @@ extension NotificationManager {
             
         case NotificationKey.reminderStopAction.rawValue:
             
-            guard let view = view as? AlarmsViewController else { break }
-            let mc = MessageCenter()
-            
-            if activeActions.count != 0 {
-                let randomInt = Int.random(in: 0..<activeActions.count)
-                let action = activeActions[randomInt]
-                
-                switch action.type {
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.call(number: phoneNumber)
-                    }
-                case ActionType.email.rawValue:
-                    if let emailAddress = action.contactInfo {
-                        mc.sendEmail(to: emailAddress, in: view)
-                    }
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.createComposeMessageView(to: phoneNumber, in: view)
-                    }
-                default:
-                    view.presentActionAlertController()
-                }
-            } else if incompleteActions.count != 0 {
-                let randomInt = Int.random(in: 0..<incompleteActions.count)
-                let action = incompleteActions[randomInt]
-                
-                switch action.type {
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.call(number: phoneNumber)
-                    }
-                case ActionType.email.rawValue:
-                    if let emailAddress = action.contactInfo {
-                        mc.sendEmail(to: emailAddress, in: view)
-                    }
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.createComposeMessageView(to: phoneNumber, in: view)
-                    }
-                default:
-                    view.presentActionAlertController()
-                }
-
-            }
-            
+ 
+            responseToReminderNotification(in: view)
 
 //            view.presentActionAlertController()
 
@@ -530,53 +486,7 @@ extension NotificationManager {
 //            view.presentActionAlertController()
 //
             
-            
-            guard let view = view as? AlarmsViewController else { return }
-            let mc = MessageCenter()
-            
-            if activeActions.count != 0 {
-                let randomInt = Int.random(in: 0..<activeActions.count)
-                let action = activeActions[randomInt]
-                
-                switch action.type {
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.call(number: phoneNumber)
-                    }
-                case ActionType.email.rawValue:
-                    if let emailAddress = action.contactInfo {
-                        mc.sendEmail(to: emailAddress, in: view)
-                    }
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.createComposeMessageView(to: phoneNumber, in: view)
-                    }
-                default:
-                    view.presentActionAlertController()
-                }
-            } else if incompleteActions.count != 0 {
-                let randomInt = Int.random(in: 0..<incompleteActions.count)
-                let action = incompleteActions[randomInt]
-                
-                switch action.type {
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.call(number: phoneNumber)
-                    }
-                case ActionType.email.rawValue:
-                    if let emailAddress = action.contactInfo {
-                        mc.sendEmail(to: emailAddress, in: view)
-                    }
-                case ActionType.call.rawValue:
-                    if let phoneNumber = action.contactInfo {
-                        mc.createComposeMessageView(to: phoneNumber, in: view)
-                    }
-                default:
-                    view.presentActionAlertController()
-                }
-
-            }
-            
+            responseToReminderNotification(in: view)
             
             clearBadgeNumbers()
             print("Reminder Notification --- Category - Banner was tapped ")
@@ -599,12 +509,10 @@ extension NotificationManager {
                 
                 print(view)
                 
-                
-                
-                
                 view.dismiss(animated: true) {
                     self.disableReminder(uuid)
-                    view.presentActionAlertController()
+//                    view.presentActionAlertController()
+                    self.responseToReminderNotification(in: view)
                 }
                 
                 
@@ -620,6 +528,57 @@ extension NotificationManager {
             
         
         
+    }
+    
+    
+    /// Present active Action or inactive Action if availble. Else User will choose from ActionPicker
+    func responseToReminderNotification(in view: UIViewController) {
+        
+        guard let view = view as? AlarmsViewController else { return }
+        let mc = MessageCenter()
+        
+        if activeActions.count != 0 {
+            let randomInt = Int.random(in: 0..<activeActions.count)
+            let action = activeActions[randomInt]
+            
+            switch action.type {
+            case ActionType.call.rawValue:
+                if let phoneNumber = action.contactInfo {
+                    mc.call(number: phoneNumber)
+                }
+            case ActionType.email.rawValue:
+                if let emailAddress = action.contactInfo {
+                    mc.sendEmail(to: emailAddress, in: view)
+                }
+            case ActionType.call.rawValue:
+                if let phoneNumber = action.contactInfo {
+                    mc.createComposeMessageView(to: phoneNumber, in: view)
+                }
+            default:
+                view.presentActionAlertController()
+            }
+        } else if incompleteActions.count != 0 {
+            let randomInt = Int.random(in: 0..<incompleteActions.count)
+            let action = incompleteActions[randomInt]
+            
+            switch action.type {
+            case ActionType.call.rawValue:
+                if let phoneNumber = action.contactInfo {
+                    mc.call(number: phoneNumber)
+                }
+            case ActionType.email.rawValue:
+                if let emailAddress = action.contactInfo {
+                    mc.sendEmail(to: emailAddress, in: view)
+                }
+            case ActionType.call.rawValue:
+                if let phoneNumber = action.contactInfo {
+                    mc.createComposeMessageView(to: phoneNumber, in: view)
+                }
+            default:
+                view.presentActionAlertController()
+            }
+
+        }
     }
     
 }
