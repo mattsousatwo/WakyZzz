@@ -13,7 +13,6 @@
 		0424EB5B20BEF89100E15E46 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0424EB5A20BEF89100E15E46 /* Assets.xcassets */; };
 		0424EB5E20BEF89100E15E46 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0424EB5C20BEF89100E15E46 /* LaunchScreen.storyboard */; };
 		0424EB6920BEF93F00E15E46 /* OldAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424EB6820BEF93F00E15E46 /* OldAlarm.swift */; };
-		0424EB6B20BEF96400E15E46 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424EB6A20BEF96400E15E46 /* Action.swift */; };
 		0424EB6D20BF022900E15E46 /* AlarmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424EB6C20BF022900E15E46 /* AlarmTableViewCell.swift */; };
 		0424EB6F20BF0FAE00E15E46 /* AlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424EB6E20BF0FAE00E15E46 /* AlarmViewController.swift */; };
 		0424EB7120C038AE00E15E46 /* sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0424EB7020C038AE00E15E46 /* sound.mp3 */; };
@@ -53,7 +52,6 @@
 		0424EB5D20BEF89100E15E46 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0424EB5F20BEF89100E15E46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0424EB6820BEF93F00E15E46 /* OldAlarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldAlarm.swift; sourceTree = "<group>"; };
-		0424EB6A20BEF96400E15E46 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		0424EB6C20BF022900E15E46 /* AlarmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTableViewCell.swift; sourceTree = "<group>"; };
 		0424EB6E20BF0FAE00E15E46 /* AlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmViewController.swift; sourceTree = "<group>"; };
 		0424EB7020C038AE00E15E46 /* sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sound.mp3; sourceTree = "<group>"; };
@@ -184,7 +182,6 @@
 			isa = PBXGroup;
 			children = (
 				0424EB6820BEF93F00E15E46 /* OldAlarm.swift */,
-				0424EB6A20BEF96400E15E46 /* Action.swift */,
 				604B4BBA26386AC40022DCCC /* NotificationManager.swift */,
 				60CC88732646F56F0089E361 /* MessageCenter.swift */,
 				6064A88C265474C300251FA6 /* ContactsControl.swift */,
@@ -312,7 +309,6 @@
 				0424EB5420BEF89000E15E46 /* AppDelegate.swift in Sources */,
 				604B4BBB26386AC40022DCCC /* NotificationManager.swift in Sources */,
 				6079AD4726581A7D00209FCB /* String+EXT.swift in Sources */,
-				0424EB6B20BEF96400E15E46 /* Action.swift in Sources */,
 				6073DAF92655CAF600D497E4 /* ActionContact+CoreDataProperties.swift in Sources */,
 				0424EB6920BEF93F00E15E46 /* OldAlarm.swift in Sources */,
 				606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */,
