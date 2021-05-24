@@ -18,7 +18,6 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     let am = AlarmManager()
     let nm = NotificationManager()
-    let ac = ActionControl()
     var editingIndexPath: IndexPath?
     var callObserver = CXCallObserver()
     
@@ -53,7 +52,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 ////            }
 //        }
 
-        ac.configure(self)
+        
         
         
         populateAlarms()

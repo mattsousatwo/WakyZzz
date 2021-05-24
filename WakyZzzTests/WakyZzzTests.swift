@@ -205,21 +205,6 @@ class AlarmManagerTests: XCTestCase {
     
 }
 
-class ActionTests: XCTestCase {
-    
-    let ac = ActionControl()
-    
-    func testShuffleActions() {
-        
-        let actionsOne = ac.shuffleActions()
-        
-        let actionsTwo = ac.shuffleActions()
-        
-        XCTAssertTrue(actionsOne != actionsTwo, "ActionsOne(\(actionsOne.actOne?.title ?? "title missing"), \(actionsOne.actTwo?.title ?? "title missing")) are equal to ActionsTwo(\(actionsTwo.actOne?.title ?? "title missing"), \(actionsTwo.actTwo?.title ?? "title missing")) - Only 3 options for actions, Actions might match occasionally.")
-        
-        
-    }
-}
 
 class ActionContactTests: XCTestCase {
     

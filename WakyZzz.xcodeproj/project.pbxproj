@@ -23,7 +23,6 @@
 		606228D426434A4200CB3B4C /* Alarm+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D226434A4200CB3B4C /* Alarm+CoreDataClass.swift */; };
 		606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */; };
 		606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D926434B1400CB3B4C /* AlarmManager.swift */; };
-		6064A889265474B900251FA6 /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6064A888265474B900251FA6 /* ActionControl.swift */; };
 		6064A88D265474C300251FA6 /* ContactsControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6064A88C265474C300251FA6 /* ContactsControl.swift */; };
 		6073DAF02655C17F00D497E4 /* Alert_High.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 60D80F162652C992004572BB /* Alert_High.m4a */; };
 		6073DAF32655C18200D497E4 /* Alert_Low.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 60D80F152652C992004572BB /* Alert_Low.m4a */; };
@@ -66,7 +65,6 @@
 		606228D226434A4200CB3B4C /* Alarm+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataClass.swift"; path = "WakyZzz/Alarm+CoreDataClass.swift"; sourceTree = "<group>"; };
 		606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataProperties.swift"; path = "WakyZzz/Alarm+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		606228D926434B1400CB3B4C /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
-		6064A888265474B900251FA6 /* ActionControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionControl.swift; sourceTree = "<group>"; };
 		6064A88C265474C300251FA6 /* ContactsControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsControl.swift; sourceTree = "<group>"; };
 		6073DAF62655CAF600D497E4 /* ActionContact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionContact+CoreDataClass.swift"; sourceTree = "<group>"; };
 		6073DAF72655CAF600D497E4 /* ActionContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionContact+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 				0424EB6A20BEF96400E15E46 /* Action.swift */,
 				604B4BBA26386AC40022DCCC /* NotificationManager.swift */,
 				60CC88732646F56F0089E361 /* MessageCenter.swift */,
-				6064A888265474B900251FA6 /* ActionControl.swift */,
 				6064A88C265474C300251FA6 /* ContactsControl.swift */,
 				6079AD4626581A7D00209FCB /* String+EXT.swift */,
 			);
@@ -304,7 +301,6 @@
 				6073DAF82655CAF600D497E4 /* ActionContact+CoreDataClass.swift in Sources */,
 				6064A88D265474C300251FA6 /* ContactsControl.swift in Sources */,
 				60CC88742646F56F0089E361 /* MessageCenter.swift in Sources */,
-				6064A889265474B900251FA6 /* ActionControl.swift in Sources */,
 				0424EB5620BEF89000E15E46 /* AlarmsViewController.swift in Sources */,
 				606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */,
 				6073DAFD2655CB0D00D497E4 /* ActionContactManager.swift in Sources */,
