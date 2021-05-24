@@ -511,7 +511,7 @@ extension NotificationManager {
                 
                 view.dismiss(animated: true) {
                     self.disableReminder(uuid)
-//                    view.presentActionAlertController()
+
                     self.responseToReminderNotification(in: view)
                 }
                 

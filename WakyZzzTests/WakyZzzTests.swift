@@ -257,5 +257,15 @@ class ActionContactTests: XCTestCase {
         XCTAssertTrue(manager.savedActionContacts.count == 0, "Failed because savedActionContacts.count = \(manager.savedActionContacts.count)" )
     }
     
+    func testConvertPhoneNumber() {
+        let originalPhoneNumber = "(617)-832-9213"
+        
+        let control = 6178329213
+        
+        guard let phoneNumber = originalPhoneNumber.convertToPhoneNumber() else { return }
+            
+        XCTAssertTrue(phoneNumber == control)
+    }
+    
     
 }

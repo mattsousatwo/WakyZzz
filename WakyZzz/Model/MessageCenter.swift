@@ -29,7 +29,6 @@ class MessageCenter: NSObject {
             } else if success == false {
                 print("Failure")
             }
-            
         })
     }
     
@@ -128,7 +127,7 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
         let alert = UIAlertController(title: "WakyZzz",
                                       message: "We will set a reminder for you to complete a task in 30 minutes.",
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay",
+        alert.addAction(UIAlertAction(title: "Set Reminder",
                                       style: .default,
                                       handler: { (action) in
                                         
@@ -195,8 +194,6 @@ extension UIViewController {
         return actionCM.savedActionContacts
     }
     
-    
-    
     /// Present Alert Controller to execute Action
     func presentActionAlertController() {
 
@@ -224,7 +221,6 @@ extension UIViewController {
                 alert.addAction(alertTwo)
             }
         }
-        
         
         alert.addAction(UIAlertAction(title: "Cancel",
                                       style: .cancel,

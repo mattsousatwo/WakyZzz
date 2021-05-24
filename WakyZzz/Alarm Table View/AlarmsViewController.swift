@@ -10,6 +10,7 @@ import UIKit
 import UserNotifications
 import Contacts
 import AVFoundation
+import CallKit
 
 class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, AlarmCellDelegate, AlarmViewControllerDelegate, UNUserNotificationCenterDelegate {
     
@@ -19,7 +20,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     let nm = NotificationManager()
     let ac = ActionControl()
     var editingIndexPath: IndexPath?
-    
+    var callObserver = CXCallObserver()
     
     
     // Add new Alarm
@@ -42,6 +43,8 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
 
+        callObserver.setDelegate(self, queue: nil)
+        
 //        let contactControl = ContactControl()
 //
 //        contactControl.requestAccess(in: self) { (numbersArray) in
@@ -238,3 +241,17 @@ extension AlarmsViewController {
     }
     
 }
+
+/// Call Kit
+extension AlarmsViewController: CXCallObserverDelegate {
+    
+    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
+
+    }
+    
+    
+}
+
+
+
+
