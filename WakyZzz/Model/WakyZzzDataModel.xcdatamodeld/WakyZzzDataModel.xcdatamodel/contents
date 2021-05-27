@@ -8,6 +8,11 @@
         <attribute name="type" attributeType="String"/>
         <attribute name="uuid" attributeType="String"/>
     </entity>
+    <entity name="ActiveContact" representedClassName="ActiveContact" syncable="YES">
+        <attribute name="contactInfo" attributeType="String"/>
+        <attribute name="parentUUID" attributeType="String"/>
+        <attribute name="uuid" attributeType="String"/>
+    </entity>
     <entity name="Alarm" representedClassName="Alarm" syncable="YES">
         <attribute name="enabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="originalTime" optional="YES" attributeType="String"/>
@@ -19,5 +24,6 @@
     <elements>
         <element name="ActionContact" positionX="-54" positionY="36" width="128" height="119"/>
         <element name="Alarm" positionX="-54" positionY="-9" width="128" height="119"/>
+        <element name="ActiveContact" positionX="-54" positionY="63" width="128" height="74"/>
     </elements>
 </model>

@@ -47,13 +47,20 @@ class MessageCenter: NSObject {
     }
     
     // Create an email from action parameters
-    func sendEmail(to recipient: String, in view: UIViewController) {
+    func sendEmail(to recipient: ActionContact, in view: UIViewController) {
         let body = "Hello, How are you?"
-
+        let activeCM = ActiveContactManager()
+//        activeCM.createActive(contact: recipient)
+        
+        
         if MFMailComposeViewController.canSendMail() {
             let mailVC = MFMailComposeViewController()
             mailVC.mailComposeDelegate = view
-            mailVC.setToRecipients([recipient])
+            if let contactInfo = recipient.contactInfo {
+                activeCM.createNewActiveContact(contactInfo: contactInfo,
+                                                parentUUID: recipient.uuid ?? "")
+                mailVC.setToRecipients([contactInfo])
+            }
             mailVC.setMessageBody(body, isHTML: false)
 
             view.present(mailVC, animated: true) {
@@ -76,6 +83,9 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
         let nm = NotificationManager()
         let view = controller.presentingViewController
         print("\nMAIL COMPOSE CONTROLLER")
+        let activeCM = ActiveContactManager()
+        activeCM.completeAction()
+        
         
         switch result {
         case .cancelled:
@@ -265,10 +275,8 @@ extension UIViewController {
                                             }
                                             break
                                         case ActionType.email.rawValue:
-                                            if let email = contact.contactInfo {
-                                                
-                                                messageCenter.sendEmail(to: email, in: self)
-                                            }
+                                            messageCenter.sendEmail(to: contact, in: self)
+                                            
                                             break
                                         case ActionType.text.rawValue:
                                             if let phoneNumber = contact.contactInfo {
