@@ -29,6 +29,7 @@
 		6073DAF92655CAF600D497E4 /* ActionContact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6073DAF72655CAF600D497E4 /* ActionContact+CoreDataProperties.swift */; };
 		6073DAFD2655CB0D00D497E4 /* ActionContactManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6073DAFC2655CB0D00D497E4 /* ActionContactManager.swift */; };
 		6079AD4726581A7D00209FCB /* String+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6079AD4626581A7D00209FCB /* String+EXT.swift */; };
+		607E01DF265C246200900CB5 /* ActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607E01DE265C246200900CB5 /* ActionType.swift */; };
 		60CC88742646F56F0089E361 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CC88732646F56F0089E361 /* MessageCenter.swift */; };
 		60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F5A64126444FE500B03E0C /* CoredataCoder.swift */; };
 /* End PBXBuildFile section */
@@ -68,6 +69,7 @@
 		6073DAF72655CAF600D497E4 /* ActionContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionContact+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		6073DAFC2655CB0D00D497E4 /* ActionContactManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionContactManager.swift; sourceTree = "<group>"; };
 		6079AD4626581A7D00209FCB /* String+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+EXT.swift"; sourceTree = "<group>"; };
+		607E01DE265C246200900CB5 /* ActionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionType.swift; sourceTree = "<group>"; };
 		60CC88732646F56F0089E361 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		60D80F152652C992004572BB /* Alert_Low.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alert_Low.m4a; sourceTree = "<group>"; };
 		60D80F162652C992004572BB /* Alert_High.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Alert_High.m4a; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				60CC88732646F56F0089E361 /* MessageCenter.swift */,
 				6064A88C265474C300251FA6 /* ContactsControl.swift */,
 				6079AD4626581A7D00209FCB /* String+EXT.swift */,
+				607E01DE265C246200900CB5 /* ActionType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */,
 				6073DAFD2655CB0D00D497E4 /* ActionContactManager.swift in Sources */,
 				60F5A64226444FE500B03E0C /* CoredataCoder.swift in Sources */,
+				607E01DF265C246200900CB5 /* ActionType.swift in Sources */,
 				0424EB6D20BF022900E15E46 /* AlarmTableViewCell.swift in Sources */,
 				606228CD264344C600CB3B4C /* WakyZzzDataModel.xcdatamodeld in Sources */,
 				0424EB6F20BF0FAE00E15E46 /* AlarmViewController.swift in Sources */,

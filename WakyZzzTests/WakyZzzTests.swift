@@ -253,4 +253,85 @@ class ActionContactTests: XCTestCase {
     }
     
     
+    func testGettingActiveActionContactsWithStatus() {
+        var otherActions = 0
+        for action in manager.activeActions {
+            if action.status != ActionStatus.active.rawValue {
+                otherActions += 1
+            }
+        }
+        XCTAssertTrue(otherActions == 0)
+    }
+    
+    
+    func testGettingIncompleteActionContactsWithStatus() {
+        var otherActions = 0
+        for action in manager.incompleteActions {
+            if action.status == ActionStatus.complete.rawValue {
+                otherActions += 1
+            }
+        }
+        XCTAssertTrue(otherActions == 0)
+    }
+    
+    func testGettingCompleteActionContactsWithStatus() {
+        var otherActions = 0
+        for action in manager.activeActions {
+            if action.status != ActionStatus.complete.rawValue {
+                otherActions += 1
+            }
+        }
+        XCTAssertTrue(otherActions == 0)
+        print(" \n After Assertion ----- \n ")
+    }
+    
+}
+
+
+class CoreDataCoderTests: XCTestCase {
+    
+    let cdCoder = CoredataCoder()
+
+    var controlDate: Date {
+        let calendar = Calendar.current
+        var components = DateComponents()
+        
+        components.year = 2021
+        components.month = 5
+        components.day = 25
+        components.hour = 3
+        components.minute = 12
+        components.second = 0
+        return calendar.date(from: components)!
+    }
+   
+    
+    func testEncodeAndDecodeDays() {
+        
+        let days: [Day : Bool] = [.monday : true,
+                                  .tuesday : false,
+                                  .wednesday : true,
+                                  .thursday : false,
+                                  .friday : false,
+                                  .saturday : true,
+                                  .sunday : true ]
+        
+        let daysAsString = cdCoder.encode(days: days)
+        
+        let decodedDays = cdCoder.decode(days: daysAsString!)!
+        
+        XCTAssert(decodedDays == days)
+    }
+    
+    
+    func testFormattingDate() {
+        
+        let formattedDateString = cdCoder.format(date: controlDate)
+        
+        let control = "3:12 AM"
+        
+        XCTAssert(formattedDateString == control)
+    }
+    
+    
 }

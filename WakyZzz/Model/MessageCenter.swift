@@ -13,7 +13,7 @@ import MessageUI
 
 // Phone Call
 class MessageCenter: NSObject {
-    
+
     let nm = NotificationManager()
     
     // Call Phone number
@@ -31,7 +31,6 @@ class MessageCenter: NSObject {
             }
         })
     }
-    
     
     /// Create Message View Controller
     func createComposeMessageView(to recipient: String, in view: UIViewController) {
@@ -57,7 +56,11 @@ class MessageCenter: NSObject {
             mailVC.setToRecipients([recipient])
             mailVC.setMessageBody(body, isHTML: false)
 
-            view.present(mailVC, animated: true)
+            view.present(mailVC, animated: true) {
+                print("Completion")
+                
+            }
+
         }
 
     }
@@ -68,27 +71,11 @@ class MessageCenter: NSObject {
 
 extension UIViewController: MFMailComposeViewControllerDelegate {
     
-    // Create an email from action parameters
-    func sendEmail(to recipient: String, in view: UIViewController) {
-        let body = "Hello, How are you?"
-        
-        if MFMailComposeViewController.canSendMail() {
-            let mailVC = MFMailComposeViewController()
-            mailVC.mailComposeDelegate = self
-            mailVC.setToRecipients([recipient])
-            mailVC.setMessageBody(body, isHTML: false)
-            
-            view.present(mailVC, animated: true)
-        }
-        
-    }
-    
     // Handle Mail Events
     public func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         let nm = NotificationManager()
         let view = controller.presentingViewController
         print("\nMAIL COMPOSE CONTROLLER")
-        
         
         switch result {
         case .cancelled:
@@ -109,6 +96,7 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
             controller.dismiss(animated: true)
         case .sent:
             print("Email sent")
+                
             controller.dismiss(animated: true) {
                 nm.clearBadgeNumbers()
             }
@@ -157,7 +145,7 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
     /// Handle text message controller events
     public func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
         let nm = NotificationManager()
-        
+        let acm = ActionContactManager()
         switch result {
         case .cancelled:
 
@@ -173,6 +161,11 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
                 self.presentActionAlertController()
             }
         case .sent:
+            if let firstRecipient = controller.recipients?.first {
+                if let activeContact = acm.fetchActionContactByContactInfo(firstRecipient) {
+                    acm.updateAction(contact: activeContact, status: .complete)
+                }
+            }
             
             nm.clearBadgeNumbers()
             

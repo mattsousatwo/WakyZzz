@@ -300,6 +300,39 @@ extension ActionContactManager {
         return nil
     }
     
+    
+    /// Search for ActionContact by id and return else return nil
+    func fetchActionContactByContactInfo(_ info: String) -> ActionContact? {
+        let contactIsLoaded = savedActionContacts.contains(where: { $0.contactInfo == info } )
+        
+        if contactIsLoaded == true {
+            if let foundContact = savedActionContacts.first(where: { $0.contactInfo == info }) {
+                return foundContact
+            }
+        } else {
+            let request: NSFetchRequest<ActionContact> = ActionContact.fetchRequest()
+            request.predicate = NSPredicate(format: "contactInfo == %@", info)
+            var contacts: [ActionContact] = []
+            do {
+                contacts = try context.fetch(request)
+            } catch {
+                print(error)
+            }
+            
+            if contacts.count == 0 {
+                return nil
+            } else {
+                if let foundContact = contacts.first(where: { $0.contactInfo == info }) {
+                    return foundContact
+                }
+            }
+
+        }
+        
+        return nil
+    }
+
+    
     func refreshActionContacts() {
         if savedActionContacts.count == 0 {
             fetchAllActionContacts()

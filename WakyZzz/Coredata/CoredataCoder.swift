@@ -33,10 +33,12 @@ class CoredataCoder {
     func format(date: Date) -> String {
         formatter.dateStyle = .none
         formatter.timeStyle = .short
+        
+        print("\(formatter.string(from: date))")
         return formatter.string(from: date)
     }
     
-    // Return Date from String 
+    // Return Date from String
     func format(string: String) -> Date {
         return formatter.date(from: string)!
     }

@@ -10,6 +10,7 @@ import Foundation
 
 extension String {
     
+    /// Remove characters from phoneNumber String - [ "(", ")", " ", "-" ]
     func convertToPhoneNumber() -> Int? {
         
         let one = self.replacingOccurrences(of: "(", with: "", options: NSString.CompareOptions.literal, range: nil)
