@@ -84,29 +84,27 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
         let view = controller.presentingViewController
         print("\nMAIL COMPOSE CONTROLLER")
         let activeCM = ActiveContactManager()
-        activeCM.completeAction()
-        
         
         switch result {
         case .cancelled:
             print("Email canceled")
-            
+            activeCM.deleteActiveContact()
             controller.dismiss(animated: true) {
                 view?.presentCancelAlert()
             }
-            
         case .failed:
             print("Email failed")
+            activeCM.deleteActiveContact()
             controller.dismiss(animated: true) {
-                
                 view?.presentActionAlertController()
             }
         case .saved:
             print("Email saved")
+            activeCM.deleteActiveContact()
             controller.dismiss(animated: true)
         case .sent:
             print("Email sent")
-                
+            activeCM.completeAction()
             controller.dismiss(animated: true) {
                 nm.clearBadgeNumbers()
             }

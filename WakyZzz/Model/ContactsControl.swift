@@ -13,83 +13,62 @@ import UIKit
 class ContactControl: ActionContactManager {
     
     var contactList: [CNContact] = []
+    var contactEmailList: [String] = []
     let contactStore = CNContactStore()
     var number: String?
     
+    var authorizationStatus: CNAuthorizationStatus {
+        return CNContactStore.authorizationStatus(for: .contacts)
+    }
+    
+    
+    /// Check if authorization status for contacts is enabled, if so create an action contact if minimum has not been met
+    func createActionContacts(view: UIViewController) {
+        switch authorizationStatus {
+        case .authorized:
+            fetchContactsAndCreateActions()
+//            for type in typesToBeCreated {
+//                if let randomContact = self.getRandomContactInfo() {
+//                    switch type {
+//                    case .email:
+//                        if let email = self.unwrapEmail(contact: randomContact) {
+//                            createNewActionContact(contactInfo: email, type: .email, status: .inactive)
+//                        }
+//                    case .call:
+//                        if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
+//                            createNewActionContact(contactInfo: phoneNumber, type: .call, status: .inactive)
+//                        }
+//                    case .text:
+//                        if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
+//                            createNewActionContact(contactInfo: phoneNumber, type: .text, status: .inactive)
+//                        }
+//                    }
+//                }
+//            }
+//
+            
+        default:
+            requestAccess(in: view)
+        }
+    }
+    
+    
     /// Request Access to useres Contacts - Get Random Contact to add to Saved ActionContacts if less than three are tagged inactive, or active
-    func requestAccess(in view: UIViewController, completion: @escaping (String) -> Void) {
+    func requestAccess(in view: UIViewController) {
         switch CNContactStore.authorizationStatus(for: .contacts) {
         case .authorized:
-            
             
             fetchAllActionContacts()
             // If less than three ActionContactsSaved
             if savedActionContacts.count < 3 {
                 
                 // Fetch Contact List
-                self.getContacts()
-                
-                for type in typesToBeCreated {
-                    
-                    if let randomContact = self.getRandomContactInfo() {
-                        switch type {
-                        case .email:
-                            if let email = self.unwrapEmail(contact: randomContact) {
-                                print("Contact name: \(randomContact.givenName), \(email)")
-                                
-                                createNewActionContact(contactInfo: email, type: .email, status: .inactive)
-                            }
-                            
-                            
-                        case .call:
-                            if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
-                                print("Contact name: \(randomContact.givenName), \(phoneNumber)")
-                                
-                                
-                                createNewActionContact(contactInfo: phoneNumber, type: .call, status: .inactive)
- 
-                            }
-                            
-                        case .text:
-                            if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
-                                print("Contact name: \(randomContact.givenName), \(phoneNumber)")
-                                
-                                createNewActionContact(contactInfo: phoneNumber, type: .text, status: .inactive)
-                            }
+                self.fetchContactsAndCreateActions()
+
             
-                        }
-                    }
-                    
-                }
-                  
+            
+            
             }
-            
-            
-            
-            
-            
-//
-//            if let randomContact = self.getRandomContactInfo() {
-//                print("Contact name: \(randomContact.givenName)")
-//                if let phoneNumber = self.unwrapPhoneNumbers(contact: randomContact) {
-//                    print("Contact name: \(randomContact.givenName), \(phoneNumber)")
-//                    number = phoneNumber
-//                    completion(phoneNumber)
-//                }
-//
-//                if let email = self.unwrapEmail(contact: randomContact) {
-//                    print("Contact name: \(randomContact.givenName), \(email)")
-//                }
-//
-//            }
-//
-                
-            
-            
-            
-            
-            
-        
             
         case .denied:
             showSettingsAlert(in: view)
@@ -98,6 +77,7 @@ class ContactControl: ActionContactManager {
 //                if granted != true {
 //                    DispatchQueue.main.async {
                 self.showSettingsAlert(in: view)
+                
 //                    }
 //                }
                 
@@ -144,21 +124,40 @@ class ContactControl: ActionContactManager {
     }
     
     // get a random contact from the list of contacts
-    func getRandomContactInfo() -> CNContact? {
+    func getRandomContactPhoneNumber() -> String? {
         if contactList.count != 0 {
             let randomInt = Int.random(in: 0..<contactList.count)
-            return contactList[randomInt]
+            if let phoneNumber = unwrapPhoneNumbers(contact: contactList[randomInt]) {
+                return phoneNumber
+            }
         }
         return nil
     }
     
-    func getContacts() {
+    /// Get random Email from contact list if avalible
+    func getRandomContactEmail() -> String? {
+        if contactEmailList.count != 0 {
+            let randomInt = Int.random(in: 0..<contactEmailList.count)
+            return contactEmailList[randomInt]
+        }
+        return nil
+    }
+    
+    func fetchContactsAndCreateActions() {
         let keys = [CNContactFormatter.descriptorForRequiredKeys(for: .fullName), CNContactPhoneNumbersKey, CNContactEmailAddressesKey] as [Any]
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
         do {
             try contactStore.enumerateContacts(with: request) { (contact, stop) in
                 
                 self.contactList.append(contact)
+                
+                for contact in self.contactList {
+                    if let email = self.unwrapEmail(contact: contact) {
+                        self.contactEmailList.append(email)
+                    }
+                }
+                
+                // ONLY FOR TESTING
                 for phoneNumber in contact.phoneNumbers {
                     if let label = phoneNumber.label {
                         let number = phoneNumber.value
@@ -166,7 +165,36 @@ class ContactControl: ActionContactManager {
                         print("Contacts.count: \(self.contactList.count), name: \(contact.givenName), tel: \(localizedLable) - \(number.stringValue)  ")
                     }
                 }
+                
+                
+                
+                
+                
             }
+
+            for type in typesToBeCreated {
+                
+                switch type {
+                case .email:
+                    if let email = self.getRandomContactEmail() {
+                        createNewActionContact(contactInfo: email, type: .email, status: .inactive)
+                    }
+                case .call:
+                    if let phoneNumber = self.getRandomContactPhoneNumber() {
+                        
+                            createNewActionContact(contactInfo: phoneNumber, type: .call, status: .inactive)
+                        
+                    }
+                case .text:
+                    if let phoneNumber = self.getRandomContactPhoneNumber() {
+                        
+                            createNewActionContact(contactInfo: phoneNumber, type: .text, status: .inactive)
+                        
+                    }
+                }
+                
+            }
+            
         } catch {
             print(error)
         }

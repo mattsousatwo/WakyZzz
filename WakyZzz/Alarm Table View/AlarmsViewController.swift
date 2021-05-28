@@ -32,7 +32,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Do any additional setup after loading the view, typically from a nib.
         config()
         
-        presentActionAlertController()
+//        presentActionAlertController()
         
         
     }
@@ -44,14 +44,9 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         callObserver.setDelegate(self, queue: nil)
         
-//        let contactControl = ContactControl()
-//
-//        contactControl.requestAccess(in: self) { (numbersArray) in
-////            if let first = numbersArray.first {
-////                self.randomNumber = first
-////            }
-//        }
+        let contactControl = ContactControl()
 
+        contactControl.createActionContacts(view: self)
         
         
         

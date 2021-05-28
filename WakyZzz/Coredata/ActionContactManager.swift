@@ -51,8 +51,7 @@ extension ActionContactManager {
         refreshActionContacts()
         
         for contact in savedActionContacts {
-            if contact.status != ActionStatus.active.rawValue ||
-                contact.status != ActionStatus.complete.rawValue {
+            if contact.status == ActionStatus.inactive.rawValue {
                 
                 switch contact.type {
                 case ActionType.email.rawValue:
@@ -119,16 +118,19 @@ extension ActionContactManager {
     var typesToBeCreated: [ActionType] {
         
         var types: [ActionType] = []
-        
-        if countOfSavedIncompleteTypes.email == 0 {
-            types.append(ActionType.email)
+        let contactControl = ContactControl()
+        if contactControl.contactEmailList.count != 0 {
+            if countOfSavedIncompleteTypes.email == 0 {
+                types.append(ActionType.email)
+            }
+
         }
         
         if countOfSavedIncompleteTypes.call == 0 {
             types.append(ActionType.call)
         }
         
-        if countOfSavedIncompleteTypes.text == 0 {
+        if countOfSavedIncompleteTypes.text <= 1 {
             types.append(ActionType.text)
         }
         
