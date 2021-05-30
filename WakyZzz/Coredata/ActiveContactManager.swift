@@ -53,6 +53,8 @@ extension ActiveContactManager {
         
         activeContact = contact
         
+        let acm = ActionContactManager()
+        acm.setContactStatus(uuid: parentUUID)
         saveContext()
     }
     
@@ -91,7 +93,7 @@ extension ActiveContactManager {
         acm.updateAction(contact: actionContact, status: .complete)
         print("Complete Action - actionContact: \(actionContact.uuid ?? "") setTo: \(actionContact.status ?? "")")
         
-        deleteActiveContact()
+        clearActiveContact()
     
     }
     
@@ -122,12 +124,13 @@ extension ActiveContactManager {
 extension ActiveContactManager {
     
     /// Delete active contact
-    func deleteActiveContact() {
+    func clearActiveContact() {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ActiveContact")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
         do {
             try context.execute(deleteRequest)
             activeContact = nil
+            
         } catch {
             print(error)
         }

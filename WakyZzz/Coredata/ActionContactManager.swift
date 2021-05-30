@@ -42,6 +42,13 @@ class ActionContactManager {
 
 extension ActionContactManager {
     
+    /// Get Action Contact with id and set status to chosen status - .active by default
+    func setContactStatus(_ status: ActionStatus = .active, uuid: String) {
+        if let action = activeActions.first(where: { $0.uuid == uuid }) {
+            updateAction(contact: action, status: status)
+        }
+    }
+    
     /// Returns three Int values of the count of each Action type stored in savedActionContacts
     var countOfSavedIncompleteTypes: (email: Int, call: Int, text: Int) {
         var emails = 0

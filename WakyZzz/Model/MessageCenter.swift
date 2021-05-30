@@ -32,19 +32,23 @@ class MessageCenter: NSObject {
         })
     }
     
-    /// Create Message View Controller
-    func createComposeMessageView(to recipient: String, in view: UIViewController) {
+    // Create Text Message View 
+    func sendTextMessage(to recipient: ActionContact, in view: UIViewController) {
+        let activeCM = ActiveContactManager()
         let messageVC = MFMessageComposeViewController()
         messageVC.body = "You look amazing today!"
-        messageVC.recipients = [recipient]
+        if let phoneNumber = recipient.contactInfo, let uuid = recipient.uuid {
+            activeCM.createNewActiveContact(contactInfo: phoneNumber,
+                                            parentUUID: uuid)
+            messageVC.recipients = [phoneNumber]
+        }
         messageVC.messageComposeDelegate = view
         
         if MFMessageComposeViewController.canSendText() {
             view.present(messageVC, animated: true)
-            
-            
         }
     }
+    
     
     // Create an email from action parameters
     func sendEmail(to recipient: ActionContact, in view: UIViewController) {
@@ -56,9 +60,9 @@ class MessageCenter: NSObject {
         if MFMailComposeViewController.canSendMail() {
             let mailVC = MFMailComposeViewController()
             mailVC.mailComposeDelegate = view
-            if let contactInfo = recipient.contactInfo {
+            if let contactInfo = recipient.contactInfo, let uuid = recipient.uuid {
                 activeCM.createNewActiveContact(contactInfo: contactInfo,
-                                                parentUUID: recipient.uuid ?? "")
+                                                parentUUID: uuid)
                 mailVC.setToRecipients([contactInfo])
             }
             mailVC.setMessageBody(body, isHTML: false)
@@ -88,19 +92,19 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
         switch result {
         case .cancelled:
             print("Email canceled")
-            activeCM.deleteActiveContact()
+            activeCM.clearActiveContact()
             controller.dismiss(animated: true) {
                 view?.presentCancelAlert()
             }
         case .failed:
             print("Email failed")
-            activeCM.deleteActiveContact()
+            activeCM.clearActiveContact()
             controller.dismiss(animated: true) {
                 view?.presentActionAlertController()
             }
         case .saved:
             print("Email saved")
-            activeCM.deleteActiveContact()
+            activeCM.clearActiveContact()
             controller.dismiss(animated: true)
         case .sent:
             print("Email sent")
@@ -154,21 +158,25 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
     public func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
         let nm = NotificationManager()
         let acm = ActionContactManager()
+        let activeCM = ActiveContactManager()
+        
         switch result {
         case .cancelled:
-
-            
+ 
+            activeCM.clearActiveContact()
             dismiss(animated: true) {
                 self.presentCancelAlert()
             }
             
             print("Message Cancelled")
         case .failed:
+            activeCM.clearActiveContact()
             print("Message Failed")
             dismiss(animated: true) {
                 self.presentActionAlertController()
             }
         case .sent:
+            activeCM.completeAction()
             if let firstRecipient = controller.recipients?.first {
                 if let activeContact = acm.fetchActionContactByContactInfo(firstRecipient) {
                     acm.updateAction(contact: activeContact, status: .complete)
@@ -277,9 +285,7 @@ extension UIViewController {
                                             
                                             break
                                         case ActionType.text.rawValue:
-                                            if let phoneNumber = contact.contactInfo {
-                                                messageCenter.createComposeMessageView(to: phoneNumber, in: self)
-                                            }
+                                            messageCenter.sendTextMessage(to: contact, in: self)
                                             break
                                         default:
                                             break

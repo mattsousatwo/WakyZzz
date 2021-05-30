@@ -550,9 +550,7 @@ extension NotificationManager {
                 mc.sendEmail(to: action, in: view)
                 
             case ActionType.call.rawValue:
-                if let phoneNumber = action.contactInfo {
-                    mc.createComposeMessageView(to: phoneNumber, in: view)
-                }
+                mc.sendTextMessage(to: action, in: view)
             default:
                 view.presentActionAlertController()
             }
@@ -569,9 +567,7 @@ extension NotificationManager {
                 mc.sendEmail(to: action, in: view)
                 
             case ActionType.call.rawValue:
-                if let phoneNumber = action.contactInfo {
-                    mc.createComposeMessageView(to: phoneNumber, in: view)
-                }
+                mc.sendTextMessage(to: action, in: view)
             default:
                 view.presentActionAlertController()
             }

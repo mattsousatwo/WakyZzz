@@ -335,3 +335,20 @@ class CoreDataCoderTests: XCTestCase {
     
     
 }
+
+
+
+class ActiveContactTests: XCTestCase {
+    
+    let acm = ActiveContactManager()
+    
+    func testDeleteActiveContact() {
+        acm.clearActiveContact()
+        let contact = acm.fetchActiveContact()
+        
+        XCTAssert(contact == nil)
+        
+    }
+    
+    
+}

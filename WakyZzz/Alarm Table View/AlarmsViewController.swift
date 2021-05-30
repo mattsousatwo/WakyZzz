@@ -18,6 +18,8 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     let am = AlarmManager()
     let nm = NotificationManager()
+    let activeCM = ActiveContactManager()
+    let contactControl = ContactControl()
     var editingIndexPath: IndexPath?
     var callObserver = CXCallObserver()
     
@@ -32,7 +34,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Do any additional setup after loading the view, typically from a nib.
         config()
         
-//        presentActionAlertController()
+        presentActionAlertController()
         
         
     }
@@ -44,7 +46,8 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         callObserver.setDelegate(self, queue: nil)
         
-        let contactControl = ContactControl()
+        
+        activeCM.clearActiveContact()
 
         contactControl.createActionContacts(view: self)
         
