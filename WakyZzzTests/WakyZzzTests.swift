@@ -34,20 +34,13 @@ class LocalNotificationTests: XCTestCase {
                 nextDate = newDate
             }
         } while nextDateYear == currentYear
-    
-            
-        
-        
-        
+
         print("\n\n - testGettingAllDates()" )
         
         for date in allDates {
             print("\n ~ \(formatter.string(from: date))\n")
         }
         print(" \n - \n\n")
-        
-        
-        
 //        print("testGettingAllDates() - \n currentDate: \(formatter.string(from: Date())),\n currentDate: \(formatter.string(from: nextMonday!))")
         
         

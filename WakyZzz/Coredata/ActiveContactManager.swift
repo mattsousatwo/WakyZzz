@@ -54,30 +54,12 @@ extension ActiveContactManager {
         activeContact = contact
         
         let acm = ActionContactManager()
-        acm.setContactStatus(uuid: parentUUID)
-        saveContext()
-    }
-    
-    /// Create a new ActiveContact & set activeContact as newly created contact
-    func createActive(contact: ActionContact, uuid: String? = nil) {
-        let contact = ActiveContact(context: context)
-        
-        if let contactInfo = contact.contactInfo {
-            contact.contactInfo = contactInfo
-        }
-        if let parentUUID = contact.uuid {
-            contact.parentUUID = parentUUID
-        }
-        if let uuid = uuid {
-            contact.uuid = uuid
-        } else {
-            contact.uuid = UUID().uuidString
+        if let actionContact = acm.fetchActionContact(id: parentUUID) {
+            acm.updateAction(contact: actionContact, status: .active)
         }
         
-        activeContact = contact
         
         saveContext()
-        print("\n New Active Contact - info: \(contact.contactInfo ?? ""), parentID: \(contact.uuid ?? "")")
     }
     
 }
