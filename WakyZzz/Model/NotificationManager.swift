@@ -12,6 +12,7 @@ import UIKit
 import MediaPlayer
 
 enum NotificationKey: String {
+    
     // Categories
     case alarmCategoryID = "ALARM_ID"
     case snoozeAlarmLevel1ID = "SNOOZE_ALARM_LEVEL_1_ID"
@@ -32,7 +33,6 @@ enum NotificationKey: String {
     case stopSnoozeAlarmLevel1 = "STOP_SNOOZE_ALARM_LEVEL_1"
     case stopSnoozeAlarmLevel2 = "STOP_SNOOZE_ALARM_LEVEL_2"
     case reminderStopAction = "STOP_REMINDER"
-    
     
     // Content
     case title = "WakyZzz"
@@ -543,9 +543,8 @@ extension NotificationManager {
             
             switch action.type {
             case ActionType.call.rawValue:
-                if let phoneNumber = action.contactInfo {
-                    mc.call(number: phoneNumber)
-                }
+                mc.call(contact: action)
+                
             case ActionType.email.rawValue:
                 mc.sendEmail(to: action, in: view)
                 
@@ -560,9 +559,8 @@ extension NotificationManager {
             
             switch action.type {
             case ActionType.call.rawValue:
-                if let phoneNumber = action.contactInfo {
-                    mc.call(number: phoneNumber)
-                }
+                mc.call(contact: action)
+                
             case ActionType.email.rawValue:
                 mc.sendEmail(to: action, in: view)
                 

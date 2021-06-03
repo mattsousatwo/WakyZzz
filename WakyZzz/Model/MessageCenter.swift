@@ -17,19 +17,23 @@ class MessageCenter: NSObject {
     let nm = NotificationManager()
     
     // Call Phone number
-    func call(number phoneNumber: String) {
+    func call(contact: ActionContact) {
         
-        let optionalPhoneNumber = phoneNumber.convertToPhoneNumber()
-        guard let phone = optionalPhoneNumber else { return }
-        
-        guard let number = URL(string: "tel://\(phone)") else { return }
-        UIApplication.shared.open(number, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
-            if success == true {
-                print("Success")
-            } else if success == false {
-                print("Failure")
-            }
-        })
+        let activeCM = ActiveContactManager()
+        if let phoneNumber = contact.contactInfo,
+           let contactNumber = phoneNumber.convertToPhoneNumber(),
+           let uuid = contact.uuid {
+            guard let phone = URL(string: "tel://\(contactNumber)") else { return }
+            UIApplication.shared.open(phone, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
+                if success == true {
+                    activeCM.createNewActiveContact(contactInfo: phoneNumber,
+                                                    parentUUID: uuid)
+                    activeCM.completeAction()
+                } else if success == false {
+                    
+                }
+            })
+        }
     }
     
     // Create Text Message View 
@@ -276,9 +280,7 @@ extension UIViewController {
                                         
                                         switch contact.type {
                                         case ActionType.call.rawValue:
-                                            if let phoneNumber = contact.contactInfo {
-                                                messageCenter.call(number: phoneNumber)
-                                            }
+                                            messageCenter.call(contact: contact)
                                             break
                                         case ActionType.email.rawValue:
                                             messageCenter.sendEmail(to: contact, in: self)
