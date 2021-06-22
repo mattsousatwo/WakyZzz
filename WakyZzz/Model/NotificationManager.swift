@@ -530,7 +530,7 @@ extension NotificationManager {
             
             switch action.type {
             case ActionType.call.rawValue:
-                mc.call(contact: action)
+                view.call(contact: action)
                 
             case ActionType.email.rawValue:
                 mc.sendEmail(to: action, in: view)
@@ -546,7 +546,7 @@ extension NotificationManager {
             
             switch action.type {
             case ActionType.call.rawValue:
-                mc.call(contact: action)
+                view.call(contact: action)
                 
             case ActionType.email.rawValue:
                 mc.sendEmail(to: action, in: view)

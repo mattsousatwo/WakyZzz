@@ -16,26 +16,6 @@ class MessageCenter: NSObject {
 
     let nm = NotificationManager()
     
-    // Call Phone number
-    func call(contact: ActionContact) {
-        
-        let activeCM = ActiveContactManager()
-        if let phoneNumber = contact.contactInfo,
-           let contactNumber = phoneNumber.convertToPhoneNumber(),
-           let uuid = contact.uuid {
-            guard let phone = URL(string: "tel://\(contactNumber)") else { return }
-            UIApplication.shared.open(phone, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
-                if success == true {
-                    activeCM.createNewActiveContact(contactInfo: phoneNumber,
-                                                    parentUUID: uuid)
-                    activeCM.completeAction()
-                } else if success == false {
-                    
-                }
-            })
-        }
-    }
-    
     // Create Text Message View 
     func sendTextMessage(to recipient: ActionContact, in view: UIViewController) {
         let activeCM = ActiveContactManager()
@@ -114,6 +94,7 @@ extension UIViewController: MFMailComposeViewControllerDelegate {
             print("Email sent")
             activeCM.completeAction()
             controller.dismiss(animated: true) {
+                self.presentCompletionAlertController()
                 nm.clearBadgeNumbers()
             }
         default:
@@ -189,7 +170,9 @@ extension UIViewController: MFMessageComposeViewControllerDelegate {
             
             nm.clearBadgeNumbers()
             
-            dismiss(animated: true)
+            dismiss(animated: true) {
+                self.presentCompletionAlertController()
+            }
         default:
             dismiss(animated: true)
             break
@@ -280,7 +263,7 @@ extension UIViewController {
                                         
                                         switch contact.type {
                                         case ActionType.call.rawValue:
-                                            messageCenter.call(contact: contact)
+                                            self.call(contact: contact)
                                             break
                                         case ActionType.email.rawValue:
                                             messageCenter.sendEmail(to: contact, in: self)
@@ -297,6 +280,64 @@ extension UIViewController {
         return alert
     }
     
+    
+    
+    
+    
+    
+    func presentCompletionAlertController() {
+        print(#function)
+        let actionCount = ActionCountManager()
+        actionCount.updateCount()
+        let count = actionCount.getCount()
+        
+        let alert = UIAlertController(title: "WakyZzz",
+                                      message: "Good Job! \nActs of Kindness Complete: \n\(count.count)",
+                                      preferredStyle: .alert)
+
+        
+        alert.addAction(UIAlertAction(title: "Done",
+                                      style: .cancel,
+                                      handler: { (action) in
+
+                                        self.dismiss(animated: true)
+                                        
+                                      }))
+        
+        // If on iPad
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = self.view
+            let bounds = self.view.bounds
+            popoverController.sourceRect = CGRect(x: bounds.minX,
+                                                  y: bounds.midY,
+                                                  width: bounds.width,
+                                                  height: bounds.height)
+            popoverController.permittedArrowDirections = []
+        }
+        
+        self.present(alert, animated: true)
+    }
+    
+    // Call Phone number
+    func call(contact: ActionContact) {
+        
+        let activeCM = ActiveContactManager()
+        if let phoneNumber = contact.contactInfo,
+           let contactNumber = phoneNumber.convertToPhoneNumber(),
+           let uuid = contact.uuid {
+            guard let phone = URL(string: "tel://\(contactNumber)") else { return }
+            UIApplication.shared.open(phone, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
+                if success == true {
+                    activeCM.createNewActiveContact(contactInfo: phoneNumber,
+                                                    parentUUID: uuid)
+                    activeCM.completeAction()
+                    self.presentCompletionAlertController()
+                } else if success == false {
+                    
+                }
+            })
+        }
+    }
     
 }
 

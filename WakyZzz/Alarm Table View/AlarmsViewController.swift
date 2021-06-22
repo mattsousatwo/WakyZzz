@@ -35,7 +35,7 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         config()
         
         
-//        presentActionAlertController()
+        presentActionAlertController()
         
         
     }
