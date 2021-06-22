@@ -150,7 +150,6 @@ extension ActionContactManager {
         var actionTwo: ActionContact?
         
         refreshActionContacts()
-        
         switch incompleteActions.count {
         case 0:
             actionOne = nil

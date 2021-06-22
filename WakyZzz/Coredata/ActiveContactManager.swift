@@ -98,8 +98,6 @@ extension ActiveContactManager {
         return nil
     }
     
-    
-    
 }
 
 

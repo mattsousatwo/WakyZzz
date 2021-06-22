@@ -26,7 +26,10 @@ class ContactControl: ActionContactManager {
     func createActionContacts(view: UIViewController) {
         switch authorizationStatus {
         case .authorized:
+            
             fetchContactsAndCreateActions()
+            
+            
 //            for type in typesToBeCreated {
 //                if let randomContact = self.getRandomContactInfo() {
 //                    switch type {
@@ -64,7 +67,7 @@ class ContactControl: ActionContactManager {
                 
                 // Fetch Contact List
                 self.fetchContactsAndCreateActions()
-
+                
             
             
             
@@ -74,12 +77,12 @@ class ContactControl: ActionContactManager {
             showSettingsAlert(in: view)
         default:
             contactStore.requestAccess(for: .contacts) { granted, error in
-//                if granted != true {
-//                    DispatchQueue.main.async {
+                if granted != true {
+                    DispatchQueue.main.async {
                 self.showSettingsAlert(in: view)
                 
-//                    }
-//                }
+                    }
+                }
                 
             }
             
@@ -147,7 +150,8 @@ class ContactControl: ActionContactManager {
         let keys = [CNContactFormatter.descriptorForRequiredKeys(for: .fullName), CNContactPhoneNumbersKey, CNContactEmailAddressesKey] as [Any]
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
         do {
-            try contactStore.enumerateContacts(with: request) { (contact, stop) in
+            
+                try contactStore.enumerateContacts(with: request) { (contact, stop) in
                 
                 self.contactList.append(contact)
                 
@@ -156,8 +160,8 @@ class ContactControl: ActionContactManager {
                         self.contactEmailList.append(email)
                     }
                 }
-                
-                // ONLY FOR TESTING
+
+//                // ONLY FOR PRESENTATION -- Print contacts list
                 for phoneNumber in contact.phoneNumbers {
                     if let label = phoneNumber.label {
                         let number = phoneNumber.value
@@ -165,15 +169,15 @@ class ContactControl: ActionContactManager {
                         print("Contacts.count: \(self.contactList.count), name: \(contact.givenName), tel: \(localizedLable) - \(number.stringValue)  ")
                     }
                 }
-                
-                
+
+
                 
                 
                 
             }
-
+            
             for type in typesToBeCreated {
-                
+
                 switch type {
                 case .email:
                     if let email = self.getRandomContactEmail() {
@@ -181,18 +185,18 @@ class ContactControl: ActionContactManager {
                     }
                 case .call:
                     if let phoneNumber = self.getRandomContactPhoneNumber() {
-                        
+
                             createNewActionContact(contactInfo: phoneNumber, type: .call, status: .inactive)
-                        
+
                     }
                 case .text:
                     if let phoneNumber = self.getRandomContactPhoneNumber() {
-                        
+
                             createNewActionContact(contactInfo: phoneNumber, type: .text, status: .inactive)
-                        
+
                     }
                 }
-                
+
             }
             
         } catch {

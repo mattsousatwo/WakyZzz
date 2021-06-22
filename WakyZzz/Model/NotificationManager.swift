@@ -308,12 +308,6 @@ extension NotificationManager {
         addNotification(components: components,
                         identifier: NotificationKey.reminderIdentifierPrefix.rawValue + uuid,
                         content: content)
-        
-        
-        
-        
-        
-        
     }
     
     // Register Notification
@@ -466,10 +460,7 @@ extension NotificationManager {
             
         case NotificationKey.reminderStopAction.rawValue:
             
- 
             responseToReminderNotification(in: view)
-
-//            view.presentActionAlertController()
 
             print("Reminder Notification Stop ")
             
@@ -481,11 +472,7 @@ extension NotificationManager {
         
         // Reminder Category
         if response.notification.request.content.categoryIdentifier == NotificationKey.reminderCategoryID.rawValue {
-//
-//            guard let view = view as? AlarmsViewController else { return }
-//            view.presentActionAlertController()
-//
-            
+
             responseToReminderNotification(in: view)
             
             clearBadgeNumbers()

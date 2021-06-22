@@ -144,8 +144,8 @@ class AlarmManagerTests: XCTestCase {
     
     // Fetch Specific Alarm test
     func testFetchSpecificAlarm() {
-        let _ = am.fetchAlarm(with: testID)
-        XCTAssert(am.allAlarms.count != 0)
+        let alarm = am.fetchAlarm(with: testID)
+        XCTAssert(alarm != nil, "Alarm == nil")
     }
     
     // Test Delete all alarms
@@ -153,7 +153,7 @@ class AlarmManagerTests: XCTestCase {
         am.fetchAllAlarms()
         am.deleteAllAlarms()
         am.fetchAllAlarms()
-        XCTAssert(am.allAlarms.count == 0)
+        XCTAssert(am.allAlarms.count == 0, "Alams count: \(am.allAlarms.count)")
     }
     
     // Test to delete Specific alarm
@@ -161,7 +161,10 @@ class AlarmManagerTests: XCTestCase {
         am.fetchAllAlarms()
         am.deleteAlarm(uuid: testID)
         am.fetchAllAlarms()
-        XCTAssert(am.allAlarms.count == 0)
+        
+        let alarmExists = am.allAlarms.contains(where: { $0.uuid == testID })
+        
+        XCTAssert(alarmExists == false)
     }
     
     // Test getting alarm Time
@@ -222,7 +225,7 @@ class ActionContactTests: XCTestCase {
         manager.fetchAllActionContacts()
         
         let contactInSavedActionContacts = manager.savedActionContacts.first(where: { $0.uuid == deletionID })
-        XCTAssertTrue(contactInSavedActionContacts != nil, "Failed because savedActionContacts containts contact with uuid: \(deletionID)" )
+        XCTAssertTrue(contactInSavedActionContacts == nil, "Failed because savedActionContacts containts contact with uuid: \(deletionID)" )
     }
     
     
@@ -334,6 +337,18 @@ class CoreDataCoderTests: XCTestCase {
 class ActiveContactTests: XCTestCase {
     
     let acm = ActiveContactManager()
+    let testID = "ACTIVECONTACT-TESTID"
+
+    
+    func testFetchActionContact() {
+        acm.createNewActiveContact(contactInfo: "Contact Info",
+                                   parentUUID: "Parent ID",
+                                   uuid: testID)
+        
+        let contact = acm.fetchActiveContact()
+        XCTAssert(contact?.uuid == testID)
+    }
+    
     
     func testDeleteActiveContact() {
         acm.clearActiveContact()

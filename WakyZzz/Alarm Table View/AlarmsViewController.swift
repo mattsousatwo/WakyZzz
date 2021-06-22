@@ -34,7 +34,8 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Do any additional setup after loading the view, typically from a nib.
         config()
         
-        presentActionAlertController()
+        
+//        presentActionAlertController()
         
         
     }
@@ -48,13 +49,13 @@ class AlarmsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         
         activeCM.clearActiveContact()
-
-        contactControl.createActionContacts(view: self)
+        DispatchQueue.main.async {
+            self.contactControl.createActionContacts(view: self)
+        }
         
-        
-        
-        populateAlarms()
-        
+        DispatchQueue.main.async {
+            self.populateAlarms()
+        }
         nm.userNotificationCenter.delegate = self
         nm.clearBadgeNumbers()
         
