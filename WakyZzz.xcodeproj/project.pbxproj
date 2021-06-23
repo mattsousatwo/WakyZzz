@@ -21,6 +21,9 @@
 		6059B9FE26826125003C76CB /* ActionCountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6059B9FD26826125003C76CB /* ActionCountManager.swift */; };
 		6059BA012682625C003C76CB /* ActionCount+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6059B9FF2682625C003C76CB /* ActionCount+CoreDataClass.swift */; };
 		6059BA022682625C003C76CB /* ActionCount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6059BA002682625C003C76CB /* ActionCount+CoreDataProperties.swift */; };
+		6059BA052682BFC3003C76CB /* CallMoniter+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6059BA032682BFC3003C76CB /* CallMoniter+CoreDataClass.swift */; };
+		6059BA062682BFC3003C76CB /* CallMoniter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6059BA042682BFC3003C76CB /* CallMoniter+CoreDataProperties.swift */; };
+		6059BA082682BFE8003C76CB /* CallMoniterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6059BA072682BFE8003C76CB /* CallMoniterManager.swift */; };
 		606228CD264344C600CB3B4C /* WakyZzzDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 606228CB264344C600CB3B4C /* WakyZzzDataModel.xcdatamodeld */; };
 		606228D426434A4200CB3B4C /* Alarm+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D226434A4200CB3B4C /* Alarm+CoreDataClass.swift */; };
 		606228D526434A4200CB3B4C /* Alarm+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */; };
@@ -69,6 +72,9 @@
 		6059B9FD26826125003C76CB /* ActionCountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCountManager.swift; sourceTree = "<group>"; };
 		6059B9FF2682625C003C76CB /* ActionCount+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionCount+CoreDataClass.swift"; sourceTree = "<group>"; };
 		6059BA002682625C003C76CB /* ActionCount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActionCount+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6059BA032682BFC3003C76CB /* CallMoniter+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallMoniter+CoreDataClass.swift"; sourceTree = "<group>"; };
+		6059BA042682BFC3003C76CB /* CallMoniter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallMoniter+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		6059BA072682BFE8003C76CB /* CallMoniterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMoniterManager.swift; sourceTree = "<group>"; };
 		606228CC264344C600CB3B4C /* WakyZzzDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WakyZzzDataModel.xcdatamodel; sourceTree = "<group>"; };
 		606228D226434A4200CB3B4C /* Alarm+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataClass.swift"; path = "WakyZzz/Alarm+CoreDataClass.swift"; sourceTree = "<group>"; };
 		606228D326434A4200CB3B4C /* Alarm+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Alarm+CoreDataProperties.swift"; path = "WakyZzz/Alarm+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -109,6 +115,8 @@
 		0424EB4720BEF89000E15E46 = {
 			isa = PBXGroup;
 			children = (
+				6059BA032682BFC3003C76CB /* CallMoniter+CoreDataClass.swift */,
+				6059BA042682BFC3003C76CB /* CallMoniter+CoreDataProperties.swift */,
 				6059B9FF2682625C003C76CB /* ActionCount+CoreDataClass.swift */,
 				6059BA002682625C003C76CB /* ActionCount+CoreDataProperties.swift */,
 				60B2084F265F4412005E4B24 /* ActiveContact+CoreDataClass.swift */,
@@ -163,6 +171,7 @@
 				6073DAFC2655CB0D00D497E4 /* ActionContactManager.swift */,
 				60B20845265F4270005E4B24 /* ActiveContactManager.swift */,
 				6059B9FD26826125003C76CB /* ActionCountManager.swift */,
+				6059BA072682BFE8003C76CB /* CallMoniterManager.swift */,
 			);
 			path = Coredata;
 			sourceTree = "<group>";
@@ -320,6 +329,7 @@
 				6059BA022682625C003C76CB /* ActionCount+CoreDataProperties.swift in Sources */,
 				6059B9FE26826125003C76CB /* ActionCountManager.swift in Sources */,
 				6064A88D265474C300251FA6 /* ContactsControl.swift in Sources */,
+				6059BA062682BFC3003C76CB /* CallMoniter+CoreDataProperties.swift in Sources */,
 				60B20846265F4270005E4B24 /* ActiveContactManager.swift in Sources */,
 				60CC88742646F56F0089E361 /* MessageCenter.swift in Sources */,
 				60B20851265F4412005E4B24 /* ActiveContact+CoreDataClass.swift in Sources */,
@@ -336,10 +346,12 @@
 				606228D426434A4200CB3B4C /* Alarm+CoreDataClass.swift in Sources */,
 				0424EB5420BEF89000E15E46 /* AppDelegate.swift in Sources */,
 				604B4BBB26386AC40022DCCC /* NotificationManager.swift in Sources */,
+				6059BA052682BFC3003C76CB /* CallMoniter+CoreDataClass.swift in Sources */,
 				6079AD4726581A7D00209FCB /* String+EXT.swift in Sources */,
 				6073DAF92655CAF600D497E4 /* ActionContact+CoreDataProperties.swift in Sources */,
 				0424EB6920BEF93F00E15E46 /* OldAlarm.swift in Sources */,
 				606228DA26434B1400CB3B4C /* AlarmManager.swift in Sources */,
+				6059BA082682BFE8003C76CB /* CallMoniterManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

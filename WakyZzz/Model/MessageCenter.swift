@@ -326,14 +326,15 @@ extension UIViewController {
            let contactNumber = phoneNumber.convertToPhoneNumber(),
            let uuid = contact.uuid {
             guard let phone = URL(string: "tel://\(contactNumber)") else { return }
+//            UIControl().sendAction(#selector(NSXPCConnection.suspend), to: UIApplication.shared, for: nil)
             UIApplication.shared.open(phone, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: { success in
                 if success == true {
                     activeCM.createNewActiveContact(contactInfo: phoneNumber,
                                                     parentUUID: uuid)
-                    activeCM.completeAction()
-                    self.presentCompletionAlertController()
+//                    activeCM.completeAction()
+                    print("Phone Success")
                 } else if success == false {
-                    
+                    print("Phone Failure")
                 }
             })
         }

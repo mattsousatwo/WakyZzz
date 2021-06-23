@@ -24,10 +24,16 @@
         <attribute name="time" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uuid" attributeType="String"/>
     </entity>
+    <entity name="CallMoniter" representedClassName="CallMoniter" syncable="YES">
+        <attribute name="isComplete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="parentUUID" optional="YES" attributeType="String"/>
+        <attribute name="uuid" optional="YES" attributeType="String"/>
+    </entity>
     <elements>
         <element name="ActionContact" positionX="-54" positionY="36" width="128" height="119"/>
         <element name="ActiveContact" positionX="-54" positionY="63" width="128" height="74"/>
         <element name="Alarm" positionX="-54" positionY="-9" width="128" height="119"/>
         <element name="ActionCount" positionX="-54" positionY="63" width="128" height="44"/>
+        <element name="CallMoniter" positionX="-45" positionY="72" width="128" height="74"/>
     </elements>
 </model>

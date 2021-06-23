@@ -58,6 +58,8 @@ extension ActiveContactManager {
             acm.updateAction(contact: actionContact, status: .active)
         }
         
+        let callMoniter = CallMoniterManager()
+        callMoniter.createNew(parentID: parentUUID)
         
         saveContext()
     }
