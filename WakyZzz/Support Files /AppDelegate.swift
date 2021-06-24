@@ -39,11 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         let callMoniterManager = CallMoniterManager()
         callMoniterManager.fetchAndCompareIfActiveContactIsComplete()
-            
-        if let view = self.window?.rootViewController {
-            view.presentCompletionAlertController()
-        }
-        
+                
 
         UIApplication.shared.applicationIconBadgeNumber = 0
     }

@@ -41,16 +41,16 @@ class CallMoniterManager {
         print("\n- Create new moniter, parentID: \(parentID)\n")
     }
     
-    func setAsComplete(uuid: String) {
+    func setAsComplete(parentID: String) {
         refreshMoniters()
         print(#function)
         guard let callMoniters = callMoniters else { return }
         for moniter in callMoniters {
-            if moniter.parentUUID == uuid {
+            if moniter.parentUUID == parentID {
                 moniter.isComplete = true
             }
         }
-        print("\n- Set call moniter as complete, parentID: \(uuid)\n")
+        print("\n- Set call moniter as complete, parentID: \(parentID)\n")
         saveContext()
     }
     
@@ -93,8 +93,13 @@ class CallMoniterManager {
                         activeContacts.completeAction()
                         print("Active contact type: \(contact.type ?? "nil")")
                         if contact.status == ActionStatus.complete.rawValue {
-                            setAsComplete(uuid: parentID)
+                            setAsComplete(parentID: parentID)
                             
+                            guard let appDel = UIApplication.shared.delegate as? AppDelegate else { return }
+                            if let view = appDel.window?.rootViewController {
+                                view.presentCompletionAlertController()
+                            }
+
                             
 //                            let n = AlarmsViewController()
 //                            n.presentCompletionAlertController()
